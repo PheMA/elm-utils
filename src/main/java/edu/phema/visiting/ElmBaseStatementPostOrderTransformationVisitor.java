@@ -6,13 +6,20 @@ import org.hl7.elm.r1.*;
 import java.util.ArrayList;
 
 public class ElmBaseStatementPostOrderTransformationVisitor<C> extends ElmBaseStatementPostOrderVisitor<Element, C> implements ElmLibraryVisitor<Element, C> {
+    private boolean debug;
 
     public ElmBaseStatementPostOrderTransformationVisitor() {
+        this.debug = false;
+    }
 
+    public ElmBaseStatementPostOrderTransformationVisitor(boolean debug) {
+        this.debug = debug;
     }
 
     private void debug(Object o) {
-        System.out.println(String.format("Visiting: %s", o.getClass().getName()));
+        if (debug) {
+            System.out.println(String.format("Visiting: %s", o.getClass().getName()));
+        }
     }
 
     private void warn(String s) {

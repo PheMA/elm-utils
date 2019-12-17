@@ -26,10 +26,8 @@ public class ElmReferenceResolvingVisitor extends ElmBaseStatementPostOrderTrans
     @Override
     public Element visitExpression(Expression elm, ElmTransformationContext context) {
         if (elm instanceof ExpressionRef) {
-            System.out.println("1");
             return this.resolveReference((ExpressionRef) elm, context);
         } else {
-            System.out.println("2");
             return super.visitExpression(elm, context);
         }
     }
