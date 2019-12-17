@@ -20,7 +20,7 @@ public class ElmTransformer {
     public ExpressionDef resolveReferences(Library library, ExpressionDef expressionDef) throws ElmTransformerException {
         ElmTransformationContext context = new ElmTransformationContext(library, expressionDef);
 
-        ElmReferenceResolvingVisitor visitor = new ElmReferenceResolvingVisitor(true);
+        ElmReferenceResolvingVisitor visitor = new ElmReferenceResolvingVisitor();
 
         return (ExpressionDef) visitor.visitExpressionDef(expressionDef, context);
     }
