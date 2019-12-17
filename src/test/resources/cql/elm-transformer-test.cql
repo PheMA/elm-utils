@@ -1,3 +1,7 @@
+using QUICK
+
+valueset "Diabetes VS": '1.2.3.4.5'
+
 define "statement one":
     true
 
@@ -19,3 +23,12 @@ define "bb":
 
 define "cc":
     "dd" and (true or false)
+
+define "Diabetes Expression":
+  [Condition: "Diabetes VS"]
+
+define "Exists from expression":
+  exists("Diabetes Expression")
+
+define "Exists from referenced expression":
+  "Exists from expression"

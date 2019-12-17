@@ -34,4 +34,15 @@ public class ElmTransformerTest {
 
         System.out.println("hello");
     }
+
+    @Test
+    public void testUnaryExpression() throws Exception {
+        ElmTransformer transformer = new ElmTransformer();
+
+        ExpressionDef statement = elmUtil.getStatementByName(library, "Exists from referenced expression");
+
+        ExpressionDef target = transformer.resolveReferences(library, statement);
+
+        System.out.println("goodbye");
+    }
 }

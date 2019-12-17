@@ -73,7 +73,11 @@ public class ElmBaseStatementPostOrderTransformationVisitor<C> extends ElmBaseSt
     @Override
     public Element visitUnaryExpression(UnaryExpression elm, C context) {
         this.debug(elm);
-        return super.visitUnaryExpression(elm, context);
+        elm.setOperand((Expression) this.visitExpression(elm.getOperand(), context));
+
+        super.visitUnaryExpression(elm, context);
+
+        return elm;
     }
 
     @Override
@@ -187,19 +191,43 @@ public class ElmBaseStatementPostOrderTransformationVisitor<C> extends ElmBaseSt
     @Override
     public Element visitTernaryExpression(TernaryExpression elm, C context) {
         this.debug(elm);
-        return super.visitTernaryExpression(elm, context);
+
+        ArrayList<Expression> transformedOps = new ArrayList<>();
+        for (Expression expression : elm.getOperand()) {
+            transformedOps.add((Expression) this.visitExpression(expression, context));
+        }
+        elm.getOperand().clear();
+        elm.withOperand(transformedOps);
+
+        super.visitTernaryExpression(elm, context);
+
+        return elm;
     }
 
     @Override
     public Element visitNaryExpression(NaryExpression elm, C context) {
         this.debug(elm);
-        return super.visitNaryExpression(elm, context);
+
+        ArrayList<Expression> transformedOps = new ArrayList<>();
+        for (Expression expression : elm.getOperand()) {
+            transformedOps.add((Expression) this.visitExpression(expression, context));
+        }
+        elm.getOperand().clear();
+        elm.withOperand(transformedOps);
+
+        super.visitNaryExpression(elm, context);
+
+        return elm;
     }
 
     @Override
     public Element visitExpressionDef(ExpressionDef elm, C context) {
         this.debug(elm);
+
         elm.setExpression((Expression) this.visitExpression(elm.getExpression(), context));
+
+        super.visitExpressionDef(elm, context);
+
         return elm;
     }
 

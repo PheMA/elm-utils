@@ -9,6 +9,14 @@ import org.hl7.elm.r1.ExpressionRef;
 import java.util.Optional;
 
 public class ElmReferenceResolvingVisitor extends ElmBaseStatementPostOrderTransformationVisitor<ElmTransformationContext> {
+    public ElmReferenceResolvingVisitor() {
+        super(false);
+    }
+
+    public ElmReferenceResolvingVisitor(boolean debug) {
+        super(debug);
+    }
+
     private Element resolveReference(ExpressionRef expressionRef, ElmTransformationContext context) {
         Optional<Expression> referencedExpression = context
             .getLibrary()
