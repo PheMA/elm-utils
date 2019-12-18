@@ -1,11 +1,12 @@
 package edu.phema.visiting;
 
+import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.cqframework.cql.elm.visiting.ElmLibraryVisitor;
 import org.hl7.elm.r1.*;
 
 import java.util.ArrayList;
 
-public class ElmBaseStatementPostOrderTransformationVisitor<C> extends ElmBaseStatementPostOrderVisitor<Element, C> implements ElmLibraryVisitor<Element, C> {
+public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBaseStatementPostOrderTransformationContext> extends ElmBaseLibraryVisitor<T, C> implements ElmLibraryVisitor<T, C> {
     private boolean debug;
 
     public ElmBaseStatementPostOrderTransformationVisitor() {
@@ -22,1147 +23,1151 @@ public class ElmBaseStatementPostOrderTransformationVisitor<C> extends ElmBaseSt
         }
     }
 
+    private void debug(String method) {
+        if (debug) {
+            System.out.println(String.format("In method: %s", method));
+        }
+    }
+
     private void warn(String s) {
         System.out.println(s);
     }
 
     @Override
-    public Element visitBinaryExpression(BinaryExpression elm, C context) {
-        this.debug(elm);
+    public T visitBinaryExpression(BinaryExpression elm, C context) {
+        this.debug("visitBinaryExpression");
 
-        ArrayList<Expression> transformedOps = new ArrayList<>();
-        for (Expression expression : elm.getOperand()) {
-            transformedOps.add((Expression) this.visitExpression(expression, context));
+        for (int i = 0; i < elm.getOperand().size(); i++) {
+            context.pushParent(elm, i);
+            this.visitExpression(elm.getOperand().get(i), context);
+            context.popParent();
         }
-        elm.getOperand().clear();
-        elm.withOperand(transformedOps);
 
         return super.visitBinaryExpression(elm, context);
     }
 
     @Override
-    public Element visitElement(org.hl7.elm.r1.Element elm, C context) {
-        this.debug(elm);
+    public T visitElement(org.hl7.elm.r1.Element elm, C context) {
+        this.debug("visitElement");
         return super.visitElement(elm, context);
     }
 
     @Override
-    public Element visitLibrary(Library elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitUsingDef(UsingDef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitIncludeDef(IncludeDef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitExpression(Expression elm, C context) {
-        this.debug(elm);
+    public T visitExpression(Expression elm, C context) {
+        this.debug("visitExpression");
         return super.visitExpression(elm, context);
     }
 
     @Override
-    public Element visitUnaryExpression(UnaryExpression elm, C context) {
-        this.debug(elm);
-        elm.setOperand((Expression) this.visitExpression(elm.getOperand(), context));
+    public T visitUnaryExpression(UnaryExpression elm, C context) {
+        this.debug("visitUnaryExpression");
 
-        super.visitUnaryExpression(elm, context);
+        context.pushParent(elm);
 
-        return elm;
+        this.visitExpression(elm.getOperand(), context);
+
+        context.popParent();
+
+        return super.visitUnaryExpression(elm, context);
     }
 
     @Override
-    public Element visitRetrieve(Retrieve elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitCodeSystemDef(CodeSystemDef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitValueSetDef(ValueSetDef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitCodeSystemRef(CodeSystemRef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitValueSetRef(ValueSetRef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitCode(Code elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitConcept(Concept elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitInCodeSystem(InCodeSystem elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitInValueSet(InValueSet elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitQuantity(Quantity elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitCalculateAge(CalculateAge elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitCalculateAgeAt(CalculateAgeAt elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitTypeSpecifier(TypeSpecifier elm, C context) {
-        this.debug(elm);
+    public T visitTypeSpecifier(TypeSpecifier elm, C context) {
+        this.debug("visitTypeSpecifier");
         return super.visitTypeSpecifier(elm, context);
     }
 
     @Override
-    public Element visitNamedTypeSpecifier(NamedTypeSpecifier elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitNamedTypeSpecifier(NamedTypeSpecifier elm, C context) {
+        this.debug("visitNamedTypeSpecifier");
+        return super.visitNamedTypeSpecifier(elm, context);
     }
 
     @Override
-    public Element visitIntervalTypeSpecifier(IntervalTypeSpecifier elm, C context) {
-        this.debug(elm);
+    public T visitIntervalTypeSpecifier(IntervalTypeSpecifier elm, C context) {
+        this.debug("visitIntervalTypeSpecifier");
         return super.visitIntervalTypeSpecifier(elm, context);
     }
 
     @Override
-    public Element visitListTypeSpecifier(ListTypeSpecifier elm, C context) {
-        this.debug(elm);
+    public T visitListTypeSpecifier(ListTypeSpecifier elm, C context) {
+        this.debug("visitListTypeSpecifier");
         return super.visitListTypeSpecifier(elm, context);
     }
 
     @Override
-    public Element visitTupleElementDefinition(TupleElementDefinition elm, C context) {
-        this.debug(elm);
+    public T visitTupleElementDefinition(TupleElementDefinition elm, C context) {
+        this.debug("visitTupleElementDefinition");
         return super.visitTupleElementDefinition(elm, context);
     }
 
     @Override
-    public Element visitTupleTypeSpecifier(TupleTypeSpecifier elm, C context) {
-        this.debug(elm);
+    public T visitTupleTypeSpecifier(TupleTypeSpecifier elm, C context) {
+        this.debug("visitTupleTypeSpecifier");
         return super.visitTupleTypeSpecifier(elm, context);
     }
 
     @Override
-    public Element visitTernaryExpression(TernaryExpression elm, C context) {
-        this.debug(elm);
+    public T visitTernaryExpression(TernaryExpression elm, C context) {
+        this.debug("visitTernaryExpression");
 
-        ArrayList<Expression> transformedOps = new ArrayList<>();
-        for (Expression expression : elm.getOperand()) {
-            transformedOps.add((Expression) this.visitExpression(expression, context));
+        for (int i = 0; i < elm.getOperand().size(); i++) {
+            context.pushParent(elm, i);
+            this.visitExpression(elm.getOperand().get(i), context);
+            context.popParent();
         }
-        elm.getOperand().clear();
-        elm.withOperand(transformedOps);
 
-        super.visitTernaryExpression(elm, context);
-
-        return elm;
+        return super.visitTernaryExpression(elm, context);
     }
 
     @Override
-    public Element visitNaryExpression(NaryExpression elm, C context) {
-        this.debug(elm);
+    public T visitNaryExpression(NaryExpression elm, C context) {
+        this.debug("visitNaryExpression");
 
-        ArrayList<Expression> transformedOps = new ArrayList<>();
-        for (Expression expression : elm.getOperand()) {
-            transformedOps.add((Expression) this.visitExpression(expression, context));
+        for (int i = 0; i < elm.getOperand().size(); i++) {
+            context.pushParent(elm, i);
+            this.visitExpression(elm.getOperand().get(i), context);
+            context.popParent();
         }
-        elm.getOperand().clear();
-        elm.withOperand(transformedOps);
 
-        super.visitNaryExpression(elm, context);
-
-        return elm;
+        return super.visitNaryExpression(elm, context);
     }
 
     @Override
-    public Element visitExpressionDef(ExpressionDef elm, C context) {
-        this.debug(elm);
+    public T visitExpressionDef(ExpressionDef elm, C context) {
+        this.debug("visitExpressionDef");
 
-        elm.setExpression((Expression) this.visitExpression(elm.getExpression(), context));
+        context.pushParent(elm);
 
-        super.visitExpressionDef(elm, context);
+        this.visitExpression(elm.getExpression(), context);
 
-        return elm;
+        context.popParent();
+
+        return super.visitExpressionDef(elm, context);
     }
 
     @Override
-    public Element visitFunctionDef(FunctionDef elm, C context) {
-        this.debug(elm);
+    public T visitFunctionDef(FunctionDef elm, C context) {
+        this.debug("visitFunctionDef");
         this.warn("FunctionDef not handled correctly");
-        return elm;
+        return super.visitFunctionDef(elm, context);
     }
 
     @Override
-    public Element visitExpressionRef(ExpressionRef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitFunctionRef(FunctionRef elm, C context) {
-        this.debug(elm);
+    public T visitFunctionRef(FunctionRef elm, C context) {
+        this.debug("visitFunctionRef");
         this.warn("FunctionRef not handled correctly");
-        return elm;
+        return super.visitFunctionRef(elm, context);
     }
 
     @Override
-    public Element visitParameterDef(ParameterDef elm, C context) {
-        this.debug(elm);
+    public T visitParameterDef(ParameterDef elm, C context) {
+        this.debug("visitParameterDef");
         this.warn("ParameterDef not handled correctly");
-        return elm;
+        return super.visitParameterDef(elm, context);
     }
 
     @Override
-    public Element visitParameterRef(ParameterRef elm, C context) {
-        this.debug(elm);
+    public T visitParameterRef(ParameterRef elm, C context) {
+        this.debug("visitParameterRef");
         this.warn("ParameterRef not handled correctly");
-        return elm;
+        return super.visitParameterRef(elm, context);
     }
 
     @Override
-    public Element visitOperandDef(OperandDef elm, C context) {
-        this.debug(elm);
+    public T visitOperandDef(OperandDef elm, C context) {
+        this.debug("visitOperandDef");
         this.warn("OperandDef not handled correctly");
-        return elm;
+        return super.visitOperandDef(elm, context);
     }
 
     @Override
-    public Element visitOperandRef(OperandRef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitIdentifierRef(IdentifierRef elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitLiteral(Literal elm, C context) {
-        this.debug(elm);
-        return elm;
-    }
-
-    @Override
-    public Element visitTupleElement(TupleElement elm, C context) {
-        this.debug(elm);
+    public T visitTupleElement(TupleElement elm, C context) {
+        this.debug("visitTupleElement");
         this.warn("TupleElement not handled correctly!");
-        return null;
+        return super.visitTupleElement(elm, context);
     }
 
     @Override
-    public Element visitTuple(Tuple elm, C context) {
-        this.debug(elm);
+    public T visitTuple(Tuple elm, C context) {
+        this.debug("visitTuple");
         this.warn("Tuple not handled correctly!");
-        return elm;
+        return super.visitTuple(elm, context);
     }
 
     @Override
-    public Element visitInstanceElement(InstanceElement elm, C context) {
-        this.debug(elm);
+    public T visitInstanceElement(InstanceElement elm, C context) {
+        this.debug("visitInstanceElement");
         this.warn("InstanceElement not handled correctly!");
-        return null;
+        return super.visitInstanceElement(elm, context);
     }
 
     @Override
-    public Element visitInstance(Instance elm, C context) {
-        this.debug(elm);
+    public T visitInstance(Instance elm, C context) {
+        this.debug("visitInstance");
         this.warn("Instance not handled correctly!");
-        return elm;
+        return super.visitInstance(elm, context);
     }
 
     @Override
-    public Element visitInterval(Interval elm, C context) {
-        this.debug(elm);
+    public T visitInterval(Interval elm, C context) {
+        this.debug("visitInterval");
         this.warn("Interval not handled correctly!");
-        return elm;
+        return super.visitInterval(elm, context);
     }
 
     @Override
-    public Element visitList(List elm, C context) {
-        this.debug(elm);
+    public T visitList(List elm, C context) {
+        this.debug("visitList");
         this.warn("List not handled correctly!");
-        return elm;
+        return super.visitList(elm, context);
     }
 
     @Override
-    public Element visitAnd(And elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLibrary(Library elm, C context) {
+        debug("visitLibrary");
+        return super.visitLibrary(elm, context);
     }
 
     @Override
-    public Element visitOr(Or elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitUsingDef(UsingDef elm, C context) {
+        debug("visitUsingDef");
+        return super.visitUsingDef(elm, context);
     }
 
     @Override
-    public Element visitXor(Xor elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIncludeDef(IncludeDef elm, C context) {
+        debug("visitIncludeDef");
+        return super.visitIncludeDef(elm, context);
     }
 
     @Override
-    public Element visitNot(Not elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitRetrieve(Retrieve elm, C context) {
+        debug("visitRetrieve");
+        return super.visitRetrieve(elm, context);
     }
 
     @Override
-    public Element visitIf(If elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCodeSystemDef(CodeSystemDef elm, C context) {
+        debug("visitCodeSystemDef");
+        return super.visitCodeSystemDef(elm, context);
     }
 
     @Override
-    public Element visitCaseItem(CaseItem elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitValueSetDef(ValueSetDef elm, C context) {
+        debug("visitValueSetDef");
+        return super.visitValueSetDef(elm, context);
     }
 
     @Override
-    public Element visitCase(Case elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCodeSystemRef(CodeSystemRef elm, C context) {
+        debug("visitCodeSystemRef");
+        return super.visitCodeSystemRef(elm, context);
     }
 
     @Override
-    public Element visitNull(Null elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitValueSetRef(ValueSetRef elm, C context) {
+        debug("visitValueSetRef");
+        return super.visitValueSetRef(elm, context);
     }
 
     @Override
-    public Element visitIsNull(IsNull elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCode(Code elm, C context) {
+        debug("visitCode");
+        return super.visitCode(elm, context);
     }
 
     @Override
-    public Element visitIsTrue(IsTrue elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitConcept(Concept elm, C context) {
+        debug("visitConcept");
+        return super.visitConcept(elm, context);
     }
 
     @Override
-    public Element visitIsFalse(IsFalse elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitInCodeSystem(InCodeSystem elm, C context) {
+        debug("visitInCodeSystem");
+        return super.visitInCodeSystem(elm, context);
     }
 
     @Override
-    public Element visitCoalesce(Coalesce elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitInValueSet(InValueSet elm, C context) {
+        debug("visitInValueSet");
+        return super.visitInValueSet(elm, context);
     }
 
     @Override
-    public Element visitIs(Is elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitQuantity(Quantity elm, C context) {
+        debug("visitQuantity");
+        return super.visitQuantity(elm, context);
     }
 
     @Override
-    public Element visitAs(As elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCalculateAge(CalculateAge elm, C context) {
+        debug("visitCalculateAge");
+        return super.visitCalculateAge(elm, context);
     }
 
     @Override
-    public Element visitConvert(Convert elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCalculateAgeAt(CalculateAgeAt elm, C context) {
+        debug("visitCalculateAgeAt");
+        return super.visitCalculateAgeAt(elm, context);
     }
 
     @Override
-    public Element visitToBoolean(ToBoolean elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitExpressionRef(ExpressionRef elm, C context) {
+        debug("visitExpressionRef");
+        return super.visitExpressionRef(elm, context);
     }
 
     @Override
-    public Element visitToConcept(ToConcept elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitOperandRef(OperandRef elm, C context) {
+        debug("visitOperandRef");
+        return super.visitOperandRef(elm, context);
     }
 
     @Override
-    public Element visitToDateTime(ToDateTime elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIdentifierRef(IdentifierRef elm, C context) {
+        debug("visitIdentifierRef");
+        return super.visitIdentifierRef(elm, context);
     }
 
     @Override
-    public Element visitToDecimal(ToDecimal elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLiteral(Literal elm, C context) {
+        debug("visitLiteral");
+        return super.visitLiteral(elm, context);
     }
 
     @Override
-    public Element visitToInteger(ToInteger elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitAnd(And elm, C context) {
+        debug("visitAnd");
+        return super.visitAnd(elm, context);
     }
 
     @Override
-    public Element visitToQuantity(ToQuantity elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitOr(Or elm, C context) {
+        debug("visitOr");
+        return super.visitOr(elm, context);
     }
 
     @Override
-    public Element visitToString(ToString elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitXor(Xor elm, C context) {
+        debug("visitXor");
+        return super.visitXor(elm, context);
     }
 
     @Override
-    public Element visitToTime(ToTime elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitNot(Not elm, C context) {
+        debug("visitNot");
+        return super.visitNot(elm, context);
     }
 
     @Override
-    public Element visitEqual(Equal elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIf(If elm, C context) {
+        debug("visitIf");
+        return super.visitIf(elm, context);
     }
 
     @Override
-    public Element visitEquivalent(Equivalent elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCaseItem(CaseItem elm, C context) {
+        debug("visitCaseItem");
+        return super.visitCaseItem(elm, context);
     }
 
     @Override
-    public Element visitNotEqual(NotEqual elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCase(Case elm, C context) {
+        debug("visitCase");
+        return super.visitCase(elm, context);
     }
 
     @Override
-    public Element visitLess(Less elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitNull(Null elm, C context) {
+        debug("visitNull");
+        return super.visitNull(elm, context);
     }
 
     @Override
-    public Element visitGreater(Greater elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIsNull(IsNull elm, C context) {
+        debug("visitIsNull");
+        return super.visitIsNull(elm, context);
     }
 
     @Override
-    public Element visitLessOrEqual(LessOrEqual elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIsTrue(IsTrue elm, C context) {
+        debug("visitIsTrue");
+        return super.visitIsTrue(elm, context);
     }
 
     @Override
-    public Element visitGreaterOrEqual(GreaterOrEqual elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIsFalse(IsFalse elm, C context) {
+        debug("visitIsFalse");
+        return super.visitIsFalse(elm, context);
     }
 
     @Override
-    public Element visitAdd(Add elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCoalesce(Coalesce elm, C context) {
+        debug("visitCoalesce");
+        return super.visitCoalesce(elm, context);
     }
 
     @Override
-    public Element visitSubtract(Subtract elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIs(Is elm, C context) {
+        debug("visitIs");
+        return super.visitIs(elm, context);
     }
 
     @Override
-    public Element visitMultiply(Multiply elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitAs(As elm, C context) {
+        debug("visitAs");
+        return super.visitAs(elm, context);
     }
 
     @Override
-    public Element visitDivide(Divide elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitConvert(Convert elm, C context) {
+        debug("visitConvert");
+        return super.visitConvert(elm, context);
     }
 
     @Override
-    public Element visitTruncatedDivide(TruncatedDivide elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToBoolean(ToBoolean elm, C context) {
+        debug("visitToBoolean");
+        return super.visitToBoolean(elm, context);
     }
 
     @Override
-    public Element visitModulo(Modulo elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToConcept(ToConcept elm, C context) {
+        debug("visitToConcept");
+        return super.visitToConcept(elm, context);
     }
 
     @Override
-    public Element visitCeiling(Ceiling elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToDateTime(ToDateTime elm, C context) {
+        debug("visitToDateTime");
+        return super.visitToDateTime(elm, context);
     }
 
     @Override
-    public Element visitFloor(Floor elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToDecimal(ToDecimal elm, C context) {
+        debug("visitToDecimal");
+        return super.visitToDecimal(elm, context);
     }
 
     @Override
-    public Element visitTruncate(Truncate elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToInteger(ToInteger elm, C context) {
+        debug("visitToInteger");
+        return super.visitToInteger(elm, context);
     }
 
     @Override
-    public Element visitAbs(Abs elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToQuantity(ToQuantity elm, C context) {
+        debug("visitToQuantity");
+        return super.visitToQuantity(elm, context);
     }
 
     @Override
-    public Element visitNegate(Negate elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToString(ToString elm, C context) {
+        debug("visitToString");
+        return super.visitToString(elm, context);
     }
 
     @Override
-    public Element visitRound(Round elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToTime(ToTime elm, C context) {
+        debug("visitToTime");
+        return super.visitToTime(elm, context);
     }
 
     @Override
-    public Element visitLn(Ln elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitEqual(Equal elm, C context) {
+        debug("visitEqual");
+        return super.visitEqual(elm, context);
     }
 
     @Override
-    public Element visitExp(Exp elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitEquivalent(Equivalent elm, C context) {
+        debug("visitEquivalent");
+        return super.visitEquivalent(elm, context);
     }
 
     @Override
-    public Element visitLog(Log elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitNotEqual(NotEqual elm, C context) {
+        debug("visitNotEqual");
+        return super.visitNotEqual(elm, context);
     }
 
     @Override
-    public Element visitPower(Power elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLess(Less elm, C context) {
+        debug("visitLess");
+        return super.visitLess(elm, context);
     }
 
     @Override
-    public Element visitSuccessor(Successor elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitGreater(Greater elm, C context) {
+        debug("visitGreater");
+        return super.visitGreater(elm, context);
     }
 
     @Override
-    public Element visitPredecessor(Predecessor elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLessOrEqual(LessOrEqual elm, C context) {
+        debug("visitLessOrEqual");
+        return super.visitLessOrEqual(elm, context);
     }
 
     @Override
-    public Element visitMinValue(MinValue elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitGreaterOrEqual(GreaterOrEqual elm, C context) {
+        debug("visitGreaterOrEqual");
+        return super.visitGreaterOrEqual(elm, context);
     }
 
     @Override
-    public Element visitMaxValue(MaxValue elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitAdd(Add elm, C context) {
+        debug("visitAdd");
+        return super.visitAdd(elm, context);
     }
 
     @Override
-    public Element visitConcatenate(Concatenate elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSubtract(Subtract elm, C context) {
+        debug("visitSubtract");
+        return super.visitSubtract(elm, context);
     }
 
     @Override
-    public Element visitCombine(Combine elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMultiply(Multiply elm, C context) {
+        debug("visitMultiply");
+        return super.visitMultiply(elm, context);
     }
 
     @Override
-    public Element visitSplit(Split elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitDivide(Divide elm, C context) {
+        debug("visitDivide");
+        return super.visitDivide(elm, context);
     }
 
     @Override
-    public Element visitLength(Length elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitTruncatedDivide(TruncatedDivide elm, C context) {
+        debug("visitTruncatedDivide");
+        return super.visitTruncatedDivide(elm, context);
     }
 
     @Override
-    public Element visitUpper(Upper elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitModulo(Modulo elm, C context) {
+        debug("visitModulo");
+        return super.visitModulo(elm, context);
     }
 
     @Override
-    public Element visitLower(Lower elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCeiling(Ceiling elm, C context) {
+        debug("visitCeiling");
+        return super.visitCeiling(elm, context);
     }
 
     @Override
-    public Element visitIndexer(Indexer elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitFloor(Floor elm, C context) {
+        debug("visitFloor");
+        return super.visitFloor(elm, context);
     }
 
     @Override
-    public Element visitPositionOf(PositionOf elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitTruncate(Truncate elm, C context) {
+        debug("visitTruncate");
+        return super.visitTruncate(elm, context);
     }
 
     @Override
-    public Element visitSubstring(Substring elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitAbs(Abs elm, C context) {
+        debug("visitAbs");
+        return super.visitAbs(elm, context);
     }
 
     @Override
-    public Element visitDurationBetween(DurationBetween elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitNegate(Negate elm, C context) {
+        debug("visitNegate");
+        return super.visitNegate(elm, context);
     }
 
     @Override
-    public Element visitDifferenceBetween(DifferenceBetween elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitRound(Round elm, C context) {
+        debug("visitRound");
+        return super.visitRound(elm, context);
     }
 
     @Override
-    public Element visitDateFrom(DateFrom elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLn(Ln elm, C context) {
+        debug("visitLn");
+        return super.visitLn(elm, context);
     }
 
     @Override
-    public Element visitTimeFrom(TimeFrom elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitExp(Exp elm, C context) {
+        debug("visitExp");
+        return super.visitExp(elm, context);
     }
 
     @Override
-    public Element visitTimezoneOffsetFrom(TimezoneOffsetFrom elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLog(Log elm, C context) {
+        debug("visitLog");
+        return super.visitLog(elm, context);
     }
 
     @Override
-    public Element visitDateTimeComponentFrom(DateTimeComponentFrom elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitPower(Power elm, C context) {
+        debug("visitPower");
+        return super.visitPower(elm, context);
     }
 
     @Override
-    public Element visitTimeOfDay(TimeOfDay elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSuccessor(Successor elm, C context) {
+        debug("visitSuccessor");
+        return super.visitSuccessor(elm, context);
     }
 
     @Override
-    public Element visitToday(Today elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitPredecessor(Predecessor elm, C context) {
+        debug("visitPredecessor");
+        return super.visitPredecessor(elm, context);
     }
 
     @Override
-    public Element visitNow(Now elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMinValue(MinValue elm, C context) {
+        debug("visitMinValue");
+        return super.visitMinValue(elm, context);
     }
 
     @Override
-    public Element visitDateTime(DateTime elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMaxValue(MaxValue elm, C context) {
+        debug("visitMaxValue");
+        return super.visitMaxValue(elm, context);
     }
 
     @Override
-    public Element visitTime(Time elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitConcatenate(Concatenate elm, C context) {
+        debug("visitConcatenate");
+        return super.visitConcatenate(elm, context);
     }
 
     @Override
-    public Element visitSameAs(SameAs elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCombine(Combine elm, C context) {
+        debug("visitCombine");
+        return super.visitCombine(elm, context);
     }
 
     @Override
-    public Element visitSameOrBefore(SameOrBefore elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSplit(Split elm, C context) {
+        debug("visitSplit");
+        return super.visitSplit(elm, context);
     }
 
     @Override
-    public Element visitSameOrAfter(SameOrAfter elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLength(Length elm, C context) {
+        debug("visitLength");
+        return super.visitLength(elm, context);
     }
 
     @Override
-    public Element visitWidth(Width elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitUpper(Upper elm, C context) {
+        debug("visitUpper");
+        return super.visitUpper(elm, context);
     }
 
     @Override
-    public Element visitStart(Start elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLower(Lower elm, C context) {
+        debug("visitLower");
+        return super.visitLower(elm, context);
     }
 
     @Override
-    public Element visitEnd(End elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIndexer(Indexer elm, C context) {
+        debug("visitIndexer");
+        return super.visitIndexer(elm, context);
     }
 
     @Override
-    public Element visitContains(Contains elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitPositionOf(PositionOf elm, C context) {
+        debug("visitPositionOf");
+        return super.visitPositionOf(elm, context);
     }
 
     @Override
-    public Element visitProperContains(ProperContains elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSubstring(Substring elm, C context) {
+        debug("visitSubstring");
+        return super.visitSubstring(elm, context);
     }
 
     @Override
-    public Element visitIn(In elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitDurationBetween(DurationBetween elm, C context) {
+        debug("visitDurationBetween");
+        return super.visitDurationBetween(elm, context);
     }
 
     @Override
-    public Element visitProperIn(ProperIn elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitDifferenceBetween(DifferenceBetween elm, C context) {
+        debug("visitDifferenceBetween");
+        return super.visitDifferenceBetween(elm, context);
     }
 
     @Override
-    public Element visitIncludes(Includes elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitDateFrom(DateFrom elm, C context) {
+        debug("visitDateFrom");
+        return super.visitDateFrom(elm, context);
     }
 
     @Override
-    public Element visitIncludedIn(IncludedIn elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitTimeFrom(TimeFrom elm, C context) {
+        debug("visitTimeFrom");
+        return super.visitTimeFrom(elm, context);
     }
 
     @Override
-    public Element visitProperIncludes(ProperIncludes elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitTimezoneOffsetFrom(TimezoneOffsetFrom elm, C context) {
+        debug("visitTimezoneOffsetFrom");
+        return super.visitTimezoneOffsetFrom(elm, context);
     }
 
     @Override
-    public Element visitProperIncludedIn(ProperIncludedIn elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitDateTimeComponentFrom(DateTimeComponentFrom elm, C context) {
+        debug("visitDateTimeComponentFrom");
+        return super.visitDateTimeComponentFrom(elm, context);
     }
 
     @Override
-    public Element visitBefore(Before elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitTimeOfDay(TimeOfDay elm, C context) {
+        debug("visitTimeOfDay");
+        return super.visitTimeOfDay(elm, context);
     }
 
     @Override
-    public Element visitAfter(After elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitToday(Today elm, C context) {
+        debug("visitToday");
+        return super.visitToday(elm, context);
     }
 
     @Override
-    public Element visitMeets(Meets elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitNow(Now elm, C context) {
+        debug("visitNow");
+        return super.visitNow(elm, context);
     }
 
     @Override
-    public Element visitMeetsBefore(MeetsBefore elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitDateTime(DateTime elm, C context) {
+        debug("visitDateTime");
+        return super.visitDateTime(elm, context);
     }
 
     @Override
-    public Element visitMeetsAfter(MeetsAfter elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitTime(Time elm, C context) {
+        debug("visitTime");
+        return super.visitTime(elm, context);
     }
 
     @Override
-    public Element visitOverlaps(Overlaps elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSameAs(SameAs elm, C context) {
+        debug("visitSameAs");
+        return super.visitSameAs(elm, context);
     }
 
     @Override
-    public Element visitOverlapsBefore(OverlapsBefore elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSameOrBefore(SameOrBefore elm, C context) {
+        debug("visitSameOrBefore");
+        return super.visitSameOrBefore(elm, context);
     }
 
     @Override
-    public Element visitOverlapsAfter(OverlapsAfter elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSameOrAfter(SameOrAfter elm, C context) {
+        debug("visitSameOrAfter");
+        return super.visitSameOrAfter(elm, context);
     }
 
     @Override
-    public Element visitStarts(Starts elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitWidth(Width elm, C context) {
+        debug("visitWidth");
+        return super.visitWidth(elm, context);
     }
 
     @Override
-    public Element visitEnds(Ends elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitStart(Start elm, C context) {
+        debug("visitStart");
+        return super.visitStart(elm, context);
     }
 
     @Override
-    public Element visitCollapse(Collapse elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitEnd(End elm, C context) {
+        debug("visitEnd");
+        return super.visitEnd(elm, context);
     }
 
     @Override
-    public Element visitUnion(Union elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitContains(Contains elm, C context) {
+        debug("visitContains");
+        return super.visitContains(elm, context);
     }
 
     @Override
-    public Element visitIntersect(Intersect elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitProperContains(ProperContains elm, C context) {
+        debug("visitProperContains");
+        return super.visitProperContains(elm, context);
     }
 
     @Override
-    public Element visitExcept(Except elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIn(In elm, C context) {
+        debug("visitIn");
+        return super.visitIn(elm, context);
     }
 
     @Override
-    public Element visitExists(Exists elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitProperIn(ProperIn elm, C context) {
+        debug("visitProperIn");
+        return super.visitProperIn(elm, context);
     }
 
     @Override
-    public Element visitTimes(Times elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIncludes(Includes elm, C context) {
+        debug("visitIncludes");
+        return super.visitIncludes(elm, context);
     }
 
     @Override
-    public Element visitFilter(Filter elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIncludedIn(IncludedIn elm, C context) {
+        debug("visitIncludedIn");
+        return super.visitIncludedIn(elm, context);
     }
 
     @Override
-    public Element visitFirst(First elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitProperIncludes(ProperIncludes elm, C context) {
+        debug("visitProperIncludes");
+        return super.visitProperIncludes(elm, context);
     }
 
     @Override
-    public Element visitLast(Last elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitProperIncludedIn(ProperIncludedIn elm, C context) {
+        debug("visitProperIncludedIn");
+        return super.visitProperIncludedIn(elm, context);
     }
 
     @Override
-    public Element visitIndexOf(IndexOf elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitBefore(Before elm, C context) {
+        debug("visitBefore");
+        return super.visitBefore(elm, context);
     }
 
     @Override
-    public Element visitFlatten(Flatten elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitAfter(After elm, C context) {
+        debug("visitAfter");
+        return super.visitAfter(elm, context);
     }
 
     @Override
-    public Element visitSort(Sort elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMeets(Meets elm, C context) {
+        debug("visitMeets");
+        return super.visitMeets(elm, context);
     }
 
     @Override
-    public Element visitForEach(ForEach elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMeetsBefore(MeetsBefore elm, C context) {
+        debug("visitMeetsBefore");
+        return super.visitMeetsBefore(elm, context);
     }
 
     @Override
-    public Element visitDistinct(Distinct elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMeetsAfter(MeetsAfter elm, C context) {
+        debug("visitMeetsAfter");
+        return super.visitMeetsAfter(elm, context);
     }
 
     @Override
-    public Element visitCurrent(Current elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitOverlaps(Overlaps elm, C context) {
+        debug("visitOverlaps");
+        return super.visitOverlaps(elm, context);
     }
 
     @Override
-    public Element visitSingletonFrom(SingletonFrom elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitOverlapsBefore(OverlapsBefore elm, C context) {
+        debug("visitOverlapsBefore");
+        return super.visitOverlapsBefore(elm, context);
     }
 
     @Override
-    public Element visitAggregateExpression(AggregateExpression elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitOverlapsAfter(OverlapsAfter elm, C context) {
+        debug("visitOverlapsAfter");
+        return super.visitOverlapsAfter(elm, context);
     }
 
     @Override
-    public Element visitCount(Count elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitStarts(Starts elm, C context) {
+        debug("visitStarts");
+        return super.visitStarts(elm, context);
     }
 
     @Override
-    public Element visitSum(Sum elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitEnds(Ends elm, C context) {
+        debug("visitEnds");
+        return super.visitEnds(elm, context);
     }
 
     @Override
-    public Element visitMin(Min elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCollapse(Collapse elm, C context) {
+        debug("visitCollapse");
+        return super.visitCollapse(elm, context);
     }
 
     @Override
-    public Element visitMax(Max elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitUnion(Union elm, C context) {
+        debug("visitUnion");
+        return super.visitUnion(elm, context);
     }
 
     @Override
-    public Element visitAvg(Avg elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIntersect(Intersect elm, C context) {
+        debug("visitIntersect");
+        return super.visitIntersect(elm, context);
     }
 
     @Override
-    public Element visitMedian(Median elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitExcept(Except elm, C context) {
+        debug("visitExcept");
+        return super.visitExcept(elm, context);
     }
 
     @Override
-    public Element visitMode(Mode elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitExists(Exists elm, C context) {
+        debug("visitExists");
+        return super.visitExists(elm, context);
     }
 
     @Override
-    public Element visitVariance(Variance elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitTimes(Times elm, C context) {
+        debug("visitTimes");
+        return super.visitTimes(elm, context);
     }
 
     @Override
-    public Element visitPopulationVariance(PopulationVariance elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitFilter(Filter elm, C context) {
+        debug("visitFilter");
+        return super.visitFilter(elm, context);
     }
 
     @Override
-    public Element visitStdDev(StdDev elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitFirst(First elm, C context) {
+        debug("visitFirst");
+        return super.visitFirst(elm, context);
     }
 
     @Override
-    public Element visitPopulationStdDev(PopulationStdDev elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitLast(Last elm, C context) {
+        debug("visitLast");
+        return super.visitLast(elm, context);
     }
 
     @Override
-    public Element visitAllTrue(AllTrue elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitIndexOf(IndexOf elm, C context) {
+        debug("visitIndexOf");
+        return super.visitIndexOf(elm, context);
     }
 
     @Override
-    public Element visitAnyTrue(AnyTrue elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitFlatten(Flatten elm, C context) {
+        debug("visitFlatten");
+        return super.visitFlatten(elm, context);
     }
 
     @Override
-    public Element visitProperty(Property elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSort(Sort elm, C context) {
+        debug("visitSort");
+        return super.visitSort(elm, context);
     }
 
     @Override
-    public Element visitAliasedQuerySource(AliasedQuerySource elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitForEach(ForEach elm, C context) {
+        debug("visitForEach");
+        return super.visitForEach(elm, context);
     }
 
     @Override
-    public Element visitLetClause(LetClause elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitDistinct(Distinct elm, C context) {
+        debug("visitDistinct");
+        return super.visitDistinct(elm, context);
     }
 
     @Override
-    public Element visitRelationshipClause(RelationshipClause elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCurrent(Current elm, C context) {
+        debug("visitCurrent");
+        return super.visitCurrent(elm, context);
     }
 
     @Override
-    public Element visitWith(With elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSingletonFrom(SingletonFrom elm, C context) {
+        debug("visitSingletonFrom");
+        return super.visitSingletonFrom(elm, context);
     }
 
     @Override
-    public Element visitWithout(Without elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitAggregateExpression(AggregateExpression elm, C context) {
+        debug("visitAggregateExpression");
+        return super.visitAggregateExpression(elm, context);
     }
 
     @Override
-    public Element visitSortByItem(SortByItem elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitCount(Count elm, C context) {
+        debug("visitCount");
+        return super.visitCount(elm, context);
     }
 
     @Override
-    public Element visitByDirection(ByDirection elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitSum(Sum elm, C context) {
+        debug("visitSum");
+        return super.visitSum(elm, context);
     }
 
     @Override
-    public Element visitByColumn(ByColumn elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMin(Min elm, C context) {
+        debug("visitMin");
+        return super.visitMin(elm, context);
     }
 
     @Override
-    public Element visitByExpression(ByExpression elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMax(Max elm, C context) {
+        debug("visitMax");
+        return super.visitMax(elm, context);
     }
 
     @Override
-    public Element visitSortClause(SortClause elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitAvg(Avg elm, C context) {
+        debug("visitAvg");
+        return super.visitAvg(elm, context);
     }
 
     @Override
-    public Element visitReturnClause(ReturnClause elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMedian(Median elm, C context) {
+        debug("visitMedian");
+        return super.visitMedian(elm, context);
     }
 
     @Override
-    public Element visitQuery(Query elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitMode(Mode elm, C context) {
+        debug("visitMode");
+        return super.visitMode(elm, context);
     }
 
     @Override
-    public Element visitAliasRef(AliasRef elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitVariance(Variance elm, C context) {
+        debug("visitVariance");
+        return super.visitVariance(elm, context);
     }
 
     @Override
-    public Element visitQueryLetRef(QueryLetRef elm, C context) {
-        this.debug(elm);
-        return elm;
+    public T visitPopulationVariance(PopulationVariance elm, C context) {
+        debug("visitPopulationVariance");
+        return super.visitPopulationVariance(elm, context);
+    }
+
+    @Override
+    public T visitStdDev(StdDev elm, C context) {
+        debug("visitStdDev");
+        return super.visitStdDev(elm, context);
+    }
+
+    @Override
+    public T visitPopulationStdDev(PopulationStdDev elm, C context) {
+        debug("visitPopulationStdDev");
+        return super.visitPopulationStdDev(elm, context);
+    }
+
+    @Override
+    public T visitAllTrue(AllTrue elm, C context) {
+        debug("visitAllTrue");
+        return super.visitAllTrue(elm, context);
+    }
+
+    @Override
+    public T visitAnyTrue(AnyTrue elm, C context) {
+        debug("visitAnyTrue");
+        return super.visitAnyTrue(elm, context);
+    }
+
+    @Override
+    public T visitProperty(Property elm, C context) {
+        debug("visitProperty");
+        return super.visitProperty(elm, context);
+    }
+
+    @Override
+    public T visitAliasedQuerySource(AliasedQuerySource elm, C context) {
+        debug("visitAliasedQuerySource");
+        return super.visitAliasedQuerySource(elm, context);
+    }
+
+    @Override
+    public T visitLetClause(LetClause elm, C context) {
+        debug("visitLetClause");
+        return super.visitLetClause(elm, context);
+    }
+
+    @Override
+    public T visitRelationshipClause(RelationshipClause elm, C context) {
+        debug("visitRelationshipClause");
+        return super.visitRelationshipClause(elm, context);
+    }
+
+    @Override
+    public T visitWith(With elm, C context) {
+        debug("visitWith");
+        return super.visitWith(elm, context);
+    }
+
+    @Override
+    public T visitWithout(Without elm, C context) {
+        debug("visitWithout");
+        return super.visitWithout(elm, context);
+    }
+
+    @Override
+    public T visitSortByItem(SortByItem elm, C context) {
+        debug("visitSortByItem");
+        return super.visitSortByItem(elm, context);
+    }
+
+    @Override
+    public T visitByDirection(ByDirection elm, C context) {
+        debug("visitByDirection");
+        return super.visitByDirection(elm, context);
+    }
+
+    @Override
+    public T visitByColumn(ByColumn elm, C context) {
+        debug("visitByColumn");
+        return super.visitByColumn(elm, context);
+    }
+
+    @Override
+    public T visitByExpression(ByExpression elm, C context) {
+        debug("visitByExpression");
+        return super.visitByExpression(elm, context);
+    }
+
+    @Override
+    public T visitSortClause(SortClause elm, C context) {
+        debug("visitSortClause");
+        return super.visitSortClause(elm, context);
+    }
+
+    @Override
+    public T visitReturnClause(ReturnClause elm, C context) {
+        debug("visitReturnClause");
+        return super.visitReturnClause(elm, context);
+    }
+
+    @Override
+    public T visitQuery(Query elm, C context) {
+        debug("visitQuery");
+        return super.visitQuery(elm, context);
+    }
+
+    @Override
+    public T visitAliasRef(AliasRef elm, C context) {
+        debug("visitAliasRef");
+        return super.visitAliasRef(elm, context);
+    }
+
+    @Override
+    public T visitQueryLetRef(QueryLetRef elm, C context) {
+        debug("visitQueryLetRef");
+        return super.visitQueryLetRef(elm, context);
     }
 }

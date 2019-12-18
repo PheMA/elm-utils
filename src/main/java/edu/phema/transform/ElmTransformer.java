@@ -1,12 +1,11 @@
 package edu.phema.transform;
 
 import edu.phema.graph.PhemaPhenotypeNode;
-import edu.phema.transform.visiting.ElmReferenceResolvingVisitor;
-import edu.phema.transform.visiting.ElmTransformationContext;
+import edu.phema.transform.visiting.*;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.Library;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultUndirectedGraph;
+import org.jgrapht.graph.SimpleGraph;
 
 public class ElmTransformer {
 
@@ -17,12 +16,14 @@ public class ElmTransformer {
      * @param expressionDef The express to use as the root of the tree
      * @return
      */
-    public ExpressionDef resolveReferences(Library library, ExpressionDef expressionDef) throws ElmTransformerException {
-        ElmTransformationContext context = new ElmTransformationContext(library, expressionDef);
+    public void resolveReferences(Library library, ExpressionDef expressionDef) throws ElmTransformerException {
+        ElmReferenceResolvingContext context = new ElmReferenceResolvingContext(library, expressionDef);
 
         ElmReferenceResolvingVisitor visitor = new ElmReferenceResolvingVisitor();
 
-        return (ExpressionDef) visitor.visitExpressionDef(expressionDef, context);
+        visitor.visitExpressionDef(expressionDef, context);
+
+        context.resolveReferences();
     }
 
     /**
@@ -32,7 +33,31 @@ public class ElmTransformer {
      * @return
      * @throws ElmTransformerException
      */
-    public DefaultUndirectedGraph<PhemaPhenotypeNode, DefaultEdge> getGraph(ExpressionDef expressionDef) throws ElmTransformerException {
-        return null;
+    public SimpleGraph<PhemaPhenotypeNode, DefaultEdge> getGraph(Library library, ExpressionDef expressionDef) throws ElmTransformerException {
+        ElmGraphTransformationContext context = new ElmGraphTransformationContext(expressionDef.hashCode(), expressionDef.getName());
+
+        ElmGraphTransformationVisitor visitor = new ElmGraphTransformationVisitor();
+
+        this.resolveReferences(library, expressionDef);
+
+        visitor.visitExpression(expressionDef.getExpression(), context);
+
+        return context.getGraph();
+    }
+
+    public String getDOTGraph(Library library, ExpressionDef expressionDef) throws ElmTransformerException {
+        ElmGraphTransformationContext context = new ElmGraphTransformationContext(expressionDef.hashCode(), expressionDef.getName());
+
+        ElmGraphTransformationVisitor visitor = new ElmGraphTransformationVisitor();
+
+        this.resolveReferences(library, expressionDef);
+
+        visitor.visitExpression(expressionDef.getExpression(), context);
+
+        try {
+            return context.getDOTGraph();
+        } catch (Exception e) {
+            throw new ElmTransformerException("Failed to generate DOT graph", e);
+        }
     }
 }

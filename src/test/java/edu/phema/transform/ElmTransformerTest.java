@@ -30,19 +30,32 @@ public class ElmTransformerTest {
 
         ExpressionDef statement = elmUtil.getStatementByName(library, "aa");
 
-        ExpressionDef target = transformer.resolveReferences(library, statement);
+        transformer.resolveReferences(library, statement);
 
         System.out.println("hello");
     }
 
     @Test
     public void testUnaryExpression() throws Exception {
-        ElmTransformer transformer = new ElmTransformer();
+//        ElmTransformer transformer = new ElmTransformer();
+//
+//        ExpressionDef statement = elmUtil.getStatementByName(library, "Exists from referenced expression");
+//
+//        transformer.resolveReferences(library, statement);
+//
+//        System.out.println("goodbye");
+    }
 
-        ExpressionDef statement = elmUtil.getStatementByName(library, "Exists from referenced expression");
-
-        ExpressionDef target = transformer.resolveReferences(library, statement);
-
-        System.out.println("goodbye");
+    @Test
+    public void simpleGraph() throws Exception {
+//        ElmTransformer transformer = new ElmTransformer();
+//
+//        ExpressionDef statement = elmUtil.getStatementByName(library, "aa");
+//
+////        SimpleGraph graph = transformer.getGraph(library, statement);
+//
+//        String graph = transformer.getDOTGraph(library, statement);
+//
+//        System.out.println(graph);
     }
 }

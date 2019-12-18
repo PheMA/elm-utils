@@ -1,14 +1,13 @@
 package edu.phema.transform.visiting;
 
 import edu.phema.visiting.ElmBaseStatementPostOrderTransformationVisitor;
-import org.hl7.elm.r1.Element;
 import org.hl7.elm.r1.Expression;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 
 import java.util.Optional;
 
-public class ElmReferenceResolvingVisitor extends ElmBaseStatementPostOrderTransformationVisitor<ElmTransformationContext> {
+public class ElmReferenceResolvingVisitor extends ElmBaseStatementPostOrderTransformationVisitor<Void, ElmReferenceResolvingContext> {
     public ElmReferenceResolvingVisitor() {
         super(false);
     }
@@ -17,26 +16,30 @@ public class ElmReferenceResolvingVisitor extends ElmBaseStatementPostOrderTrans
         super(debug);
     }
 
-    private Element resolveReference(ExpressionRef expressionRef, ElmTransformationContext context) {
-        Optional<Expression> referencedExpression = context
+    private ExpressionDef resolveReference(ExpressionRef expressionRef, ElmReferenceResolvingContext context) {
+        Optional<ExpressionDef> referencedExpressionDef = context
             .getLibrary()
             .getStatements()
             .getDef()
             .stream()
             .filter(ed -> ed.getName().equals(expressionRef.getName()))
-            .map(ExpressionDef::getExpression)
             .findFirst();
 
+        Expression target = referencedExpressionDef.map(ExpressionDef::getExpression).orElse(null);
+
         // FIXME: Figure out how to fail
-        return referencedExpression.orElse(null);
+        context.addMap(target);
+
+        return referencedExpressionDef.orElse(null);
     }
 
     @Override
-    public Element visitExpression(Expression elm, ElmTransformationContext context) {
+    public Void visitExpression(Expression elm, ElmReferenceResolvingContext context) {
         if (elm instanceof ExpressionRef) {
-            return this.resolveReference((ExpressionRef) elm, context);
-        } else {
-            return super.visitExpression(elm, context);
+            ExpressionDef target = this.resolveReference((ExpressionRef) elm, context);
+            return super.visitExpressionDef(target, context);
         }
+
+        return super.visitExpression(elm, context);
     }
 }
