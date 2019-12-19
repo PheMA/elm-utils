@@ -28,7 +28,7 @@ public class ElmTransformerTest {
     public void simple() throws Exception {
         ElmTransformer transformer = new ElmTransformer();
 
-        ExpressionDef statement = elmUtil.getStatementByName(library, "aa");
+        ExpressionDef statement = elmUtil.getStatementByName(library, "HF Case");
 
         transformer.resolveReferences(library, statement);
 
@@ -48,14 +48,14 @@ public class ElmTransformerTest {
 
     @Test
     public void simpleGraph() throws Exception {
-//        ElmTransformer transformer = new ElmTransformer();
-//
-//        ExpressionDef statement = elmUtil.getStatementByName(library, "aa");
-//
-////        SimpleGraph graph = transformer.getGraph(library, statement);
-//
-//        String graph = transformer.getDOTGraph(library, statement);
-//
-//        System.out.println(graph);
+        ElmTransformer transformer = new ElmTransformer();
+
+        ExpressionDef statement = elmUtil.getStatementByName(library, "HF Case");
+
+//        SimpleGraph graph = transformer.getGraph(library, statement);
+
+        String graph = transformer.getDOTGraph(library, statement);
+
+        System.out.println(graph);
     }
 }

@@ -33,6 +33,8 @@ public class ElmReferenceResolvingContext extends ElmBaseTransformationContext {
                 ((NaryExpression) source).getOperand().set(ref.getOperandIndex(), target);
             } else if (source instanceof ExpressionDef) {
                 ((ExpressionDef) source).setExpression(target);
+            } else if (source instanceof AggregateExpression) {
+                ((AggregateExpression) source).setSource(target);
             } else {
                 throw new ElmTransformerException(String.format("Cannot resolve reference for source type: %s", source.getClass().getSimpleName()));
             }

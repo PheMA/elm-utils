@@ -1,51 +1,71 @@
 package edu.phema.transform.visiting;
 
-import edu.phema.graph.PhemaPhenotypeNode;
 import edu.phema.visiting.ElmBaseStatementPostOrderTransformationVisitor;
-import org.hl7.elm.r1.BinaryExpression;
-import org.hl7.elm.r1.Element;
-import org.hl7.elm.r1.Expression;
-import org.hl7.elm.r1.Literal;
+import org.hl7.elm.r1.*;
 
-import java.util.ArrayList;
-
-public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTransformationVisitor<PhemaPhenotypeNode, ElmGraphTransformationContext> {
+public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTransformationVisitor<Void, ElmGraphTransformationContext> {
     public ElmGraphTransformationVisitor() {
         super(true);
+    }
+
+    public String buildLabelForQuery(Query query) {
+        return "QQQ";
     }
 
     public String getLabel(Expression elm) {
         if (elm instanceof Literal) {
             return ((Literal) elm).getValue();
+        } else if (elm instanceof Query) {
+            return buildLabelForQuery((Query) elm);
+        } else if (elm instanceof Retrieve) {
+            return String.format("%s in '%s'", ((Retrieve) elm).getDataType().getLocalPart(), ((ValueSetRef) ((Retrieve) elm).getCodes()).getName());
         } else {
             return elm.getClass().getSimpleName();
         }
     }
 
     @Override
-    public PhemaPhenotypeNode visitExpression(Expression elm, ElmGraphTransformationContext context) {
+    public Void visitExpression(Expression elm, ElmGraphTransformationContext context) {
         String label = getLabel(elm);
 
+        // Add root
         context.addChild(elm.getTrackerId().hashCode(), label);
 
-        return super.visitExpression(elm, context);
+        super.visitExpression(elm, context);
+
+        return null;
     }
 
     @Override
-    public PhemaPhenotypeNode visitBinaryExpression(BinaryExpression elm, ElmGraphTransformationContext context) {
-//        String label = getLabel(elm);
-//
-//        context.push(elm.getTrackerId().hashCode(), label);
-//
-//        ArrayList<Expression> transformedOps = new ArrayList<>();
-//        for (Expression expression : elm.getOperand()) {
-//            transformedOps.add((Expression) this.visitExpression(expression, context));
-//        }
-//        elm.getOperand().clear();
-//        elm.withOperand(transformedOps);
-//
-//        context.pop();
+    public Void visitUnaryExpression(UnaryExpression elm, ElmGraphTransformationContext context) {
+        String label = getLabel(elm);
 
-        return super.visitBinaryExpression(elm, context);
+        context.push(elm.getTrackerId().hashCode(), label);
+        super.visitUnaryExpression(elm, context);
+        context.pop();
+
+        return null;
+    }
+
+    @Override
+    public Void visitBinaryExpression(BinaryExpression elm, ElmGraphTransformationContext context) {
+        String label = getLabel(elm);
+
+        context.push(elm.getTrackerId().hashCode(), label);
+        super.visitBinaryExpression(elm, context);
+        context.pop();
+
+        return null;
+    }
+
+    @Override
+    public Void visitAggregateExpression(AggregateExpression elm, ElmGraphTransformationContext context) {
+        String label = getLabel(elm);
+
+        context.push(elm.getTrackerId().hashCode(), label);
+        super.visitAggregateExpression(elm, context);
+        context.pop();
+
+        return null;
     }
 }
