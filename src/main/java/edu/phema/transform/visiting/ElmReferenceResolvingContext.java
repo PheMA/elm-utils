@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ElmReferenceResolvingContext extends ElmBaseTransformationContext {
-    private Map<ElmParent, Element> referenceMap;
+    private Map<StackNode, Element> referenceMap;
 
     public ElmReferenceResolvingContext(Library library, ExpressionDef source) {
         super(library, source);
@@ -15,11 +15,11 @@ public class ElmReferenceResolvingContext extends ElmBaseTransformationContext {
     }
 
     public void addMap(Expression target) {
-        this.referenceMap.put(peekParent(), target);
+        this.referenceMap.put((StackNode) peek(), target);
     }
 
     public void resolveReferences() throws ElmTransformerException {
-        for (ElmParent ref : referenceMap.keySet()) {
+        for (StackNode ref : referenceMap.keySet()) {
             Element source = ref.getSource();
             Expression target = (Expression) referenceMap.get(ref);
 

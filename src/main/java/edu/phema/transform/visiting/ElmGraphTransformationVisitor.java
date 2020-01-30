@@ -28,7 +28,6 @@ public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTran
     public Void visitExpression(Expression elm, ElmGraphTransformationContext context) {
         String label = getLabel(elm);
 
-        // Add root
         context.addChild(elm.getTrackerId().hashCode(), label);
 
         super.visitExpression(elm, context);
@@ -36,36 +35,4 @@ public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTran
         return null;
     }
 
-    @Override
-    public Void visitUnaryExpression(UnaryExpression elm, ElmGraphTransformationContext context) {
-        String label = getLabel(elm);
-
-        context.push(elm.getTrackerId().hashCode(), label);
-        super.visitUnaryExpression(elm, context);
-        context.pop();
-
-        return null;
-    }
-
-    @Override
-    public Void visitBinaryExpression(BinaryExpression elm, ElmGraphTransformationContext context) {
-        String label = getLabel(elm);
-
-        context.push(elm.getTrackerId().hashCode(), label);
-        super.visitBinaryExpression(elm, context);
-        context.pop();
-
-        return null;
-    }
-
-    @Override
-    public Void visitAggregateExpression(AggregateExpression elm, ElmGraphTransformationContext context) {
-        String label = getLabel(elm);
-
-        context.push(elm.getTrackerId().hashCode(), label);
-        super.visitAggregateExpression(elm, context);
-        context.pop();
-
-        return null;
-    }
 }

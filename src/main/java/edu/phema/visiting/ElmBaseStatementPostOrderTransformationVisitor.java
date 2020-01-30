@@ -4,8 +4,6 @@ import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.cqframework.cql.elm.visiting.ElmLibraryVisitor;
 import org.hl7.elm.r1.*;
 
-import java.util.ArrayList;
-
 public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBaseStatementPostOrderTransformationContext> extends ElmBaseLibraryVisitor<T, C> implements ElmLibraryVisitor<T, C> {
     private boolean debug;
 
@@ -17,19 +15,19 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
         this.debug = debug;
     }
 
-    private void debug(Object o) {
+    protected void debug(Object o) {
         if (debug) {
             System.out.println(String.format("Visiting: %s", o.getClass().getName()));
         }
     }
 
-    private void debug(String method) {
+    protected void debug(String method) {
         if (debug) {
             System.out.println(String.format("In method: %s", method));
         }
     }
 
-    private void warn(String s) {
+    protected void warn(String s) {
         System.out.println(s);
     }
 
@@ -38,9 +36,9 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
         this.debug("visitBinaryExpression");
 
         for (int i = 0; i < elm.getOperand().size(); i++) {
-            context.pushParent(elm, i);
+            context.push(elm, i);
             this.visitExpression(elm.getOperand().get(i), context);
-            context.popParent();
+            context.pop();
         }
 
         return super.visitBinaryExpression(elm, context);
@@ -62,11 +60,11 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     public T visitUnaryExpression(UnaryExpression elm, C context) {
         this.debug("visitUnaryExpression");
 
-        context.pushParent(elm);
+        context.push(elm);
 
         this.visitExpression(elm.getOperand(), context);
 
-        context.popParent();
+        context.pop();
 
         return super.visitUnaryExpression(elm, context);
     }
@@ -112,9 +110,9 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
         this.debug("visitTernaryExpression");
 
         for (int i = 0; i < elm.getOperand().size(); i++) {
-            context.pushParent(elm, i);
+            context.push(elm, i);
             this.visitExpression(elm.getOperand().get(i), context);
-            context.popParent();
+            context.pop();
         }
 
         return super.visitTernaryExpression(elm, context);
@@ -125,9 +123,9 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
         this.debug("visitNaryExpression");
 
         for (int i = 0; i < elm.getOperand().size(); i++) {
-            context.pushParent(elm, i);
+            context.push(elm, i);
             this.visitExpression(elm.getOperand().get(i), context);
-            context.popParent();
+            context.pop();
         }
 
         return super.visitNaryExpression(elm, context);
@@ -137,11 +135,11 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     public T visitExpressionDef(ExpressionDef elm, C context) {
         this.debug("visitExpressionDef");
 
-        context.pushParent(elm);
+        context.push(elm);
 
         this.visitExpression(elm.getExpression(), context);
 
-        context.popParent();
+        context.pop();
 
         return null;
     }
@@ -1001,9 +999,9 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     public T visitAggregateExpression(AggregateExpression elm, C context) {
         debug("visitAggregateExpression");
 
-        context.pushParent(elm, -1);
+        context.push(elm);
         this.visitExpression(elm.getSource(), context);
-        context.popParent();
+        context.pop();
 
         return super.visitAggregateExpression(elm, context);
     }
@@ -1096,11 +1094,11 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     public T visitAliasedQuerySource(AliasedQuerySource elm, C context) {
         debug("visitAliasedQuerySource");
 
-        context.pushParent(elm, -1);
+        context.push(elm);
 
         this.visitExpression(elm.getExpression(), context);
 
-        context.popParent();
+        context.pop();
 
         return super.visitAliasedQuerySource(elm, context);
     }
@@ -1194,11 +1192,11 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     @XmlElement(namespace = "urn:hl7-org:elm:r1")
     protected SortClause sort;
          */
-        context.pushParent(elm, -1);
+        context.push(elm);
 
         elm.getSource().stream().forEach(s -> this.visitAliasedQuerySource(s, context));
 
-        context.popParent();
+        context.pop();
 
 
         return super.visitQuery(elm, context);

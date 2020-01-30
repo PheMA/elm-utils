@@ -2,6 +2,7 @@ package edu.phema.transform.visiting;
 
 import edu.phema.graph.PhemaPhenotypeNode;
 import edu.phema.visiting.ElmBaseStatementPostOrderTransformationContext;
+import org.hl7.elm.r1.Element;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.io.ComponentNameProvider;
@@ -14,7 +15,20 @@ import java.util.Stack;
 
 public class ElmGraphTransformationContext extends ElmBaseStatementPostOrderTransformationContext {
     private SimpleGraph<PhemaPhenotypeNode, DefaultEdge> graph;
+
     private Stack<PhemaPhenotypeNode> stack;
+
+    public void printStack() {
+        System.out.print("[ ");
+
+        stack.stream().forEach(node -> System.out.print(node.getName() + ", "));
+
+        print(" ]");
+    }
+
+    protected void print(String message) {
+        System.out.println(message);
+    }
 
     public ElmGraphTransformationContext(int id, String name) {
         this.graph = new SimpleGraph<>(DefaultEdge.class);
@@ -26,44 +40,46 @@ public class ElmGraphTransformationContext extends ElmBaseStatementPostOrderTran
         this.stack.push(root);
     }
 
-    public PhemaPhenotypeNode getCurrentRoot() {
-        return this.stack.peek();
-    }
-
     public PhemaPhenotypeNode addChild(int id, String name) {
         PhemaPhenotypeNode child = new PhemaPhenotypeNode(id, name);
 
         this.graph.addVertex(child);
-        this.graph.addEdge(this.stack.peek(), child);
+
+        PhemaPhenotypeNode parent = this.stack.peek();
+        if (!this.graph.containsVertex(parent)) {
+            this.graph.addVertex(parent);
+        }
+
+        this.graph.addEdge(parent, child);
 
         return child;
     }
 
-    public PhemaPhenotypeNode push(int id, String name) {
-        PhemaPhenotypeNode vertex = new PhemaPhenotypeNode(id, name);
+    @Override
+    public Object push(Element elm, int index) {
+        PhemaPhenotypeNode node = new PhemaPhenotypeNode(elm.getTrackerId().hashCode(), elm.getClass().getSimpleName());
 
-        this.graph.addVertex(vertex);
-
-        return this.stack.push(vertex);
+        return stack.push(node);
     }
 
-    public PhemaPhenotypeNode push(int id, String name, PhemaPhenotypeNode dst) {
-        PhemaPhenotypeNode src = this.push(id, name);
+    @Override
+    public Object push(Element elm) {
+        PhemaPhenotypeNode node = new PhemaPhenotypeNode(elm.getTrackerId().hashCode(), elm.getClass().getSimpleName());
 
-        this.graph.addEdge(src, dst);
-
-        return src;
+        return stack.push(node);
     }
 
-    public PhemaPhenotypeNode pop() {
-        return this.stack.pop();
+    @Override
+    public Object pop() {
+        return stack.pop();
     }
 
-//    public void addEdge(String src, String dst) {
-//        this.graph.addEdge(new PhemaPhenotypeNode(src), new PhemaPhenotypeNode(src));
-//    }
+    @Override
+    public Object peek() {
+        return stack.peek();
+    }
 
-    public SimpleGraph getGraph() {
+    public SimpleGraph<PhemaPhenotypeNode, DefaultEdge> getGraph() {
         return this.graph;
     }
 

@@ -5,13 +5,19 @@ import org.hl7.elm.r1.Element;
 import java.util.Stack;
 
 public class ElmBaseStatementPostOrderTransformationContext {
-    public static class ElmParent {
-        private int operandIndex;
-        private Element source;
 
-        public ElmParent(Element source, int operandIndex) {
-            this.source = source;
+    public static class StackNode {
+        private int operandIndex;
+        private Element element;
+
+        public StackNode(Element element, int operandIndex) {
+            this.element = element;
             this.operandIndex = operandIndex;
+        }
+
+        public StackNode(Element element) {
+            this.element = element;
+            this.operandIndex = -1;
         }
 
         public int getOperandIndex() {
@@ -19,29 +25,29 @@ public class ElmBaseStatementPostOrderTransformationContext {
         }
 
         public Element getSource() {
-            return source;
+            return element;
         }
     }
 
-    protected Stack<ElmParent> parent;
+    private Stack<Object> stack;
 
     public ElmBaseStatementPostOrderTransformationContext() {
-        this.parent = new Stack<>();
+        this.stack = new Stack<>();
     }
 
-    public ElmParent pushParent(Element elm, int index) {
-        return this.parent.push(new ElmParent(elm, index));
+    public Object push(Element element, int index) {
+        return this.stack.push(new StackNode(element, index));
     }
 
-    public ElmParent pushParent(Element elm) {
-        return this.parent.push(new ElmParent(elm, -1));
+    public Object push(Element element) {
+        return this.stack.push(new StackNode(element));
     }
 
-    public ElmParent popParent() {
-        return this.parent.pop();
+    public Object pop() {
+        return this.stack.pop();
     }
 
-    public ElmParent peekParent() {
-        return this.parent.peek();
+    public Object peek() {
+        return this.stack.peek();
     }
 }
