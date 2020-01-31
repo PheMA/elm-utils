@@ -4,7 +4,7 @@
     <groupId>edu.phema</groupId>
     <artifactId>elm-utils</artifactId>
     <packaging>jar</packaging>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>0.0.10</version>
     <name>elm-utils</name>
     <url>http://maven.apache.org</url>
 
