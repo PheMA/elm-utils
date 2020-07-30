@@ -9,7 +9,7 @@ public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTran
     }
 
     public String buildLabelForQuery(Query query) {
-        return "QQQ";
+        return "Query";
     }
 
     public String getLabel(Expression elm) {
@@ -18,14 +18,53 @@ public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTran
         } else if (elm instanceof Query) {
             return buildLabelForQuery((Query) elm);
         } else if (elm instanceof Retrieve) {
-            return String.format("%s in '%s'", ((Retrieve) elm).getDataType().getLocalPart(), ((ValueSetRef) ((Retrieve) elm).getCodes()).getName());
+          return String.format("%s in '%s'", ((Retrieve) elm).getDataType().getLocalPart(), ((ValueSetRef) ((Retrieve) elm).getCodes()).getName());
+        } else if (elm instanceof Property) {
+          Property property = (Property)elm;
+          String scopeName = property.getScope();
+          if (scopeName == null) {
+            Expression source = property.getSource();
+            if (source != null && source instanceof ExpressionRef) {
+              scopeName = ((ExpressionRef)source).getName();
+            }
+          }
+
+          return String.format("%s.%s", scopeName, property.getPath());
+        } else if (elm instanceof As) {
+          return String.format("%s %s", elm.getClass().getSimpleName(), ((As)elm).getAsType());
         } else {
             return elm.getClass().getSimpleName();
         }
     }
 
     @Override
+    public Void visitQuery(Query elm, ElmGraphTransformationContext context) {
+      String label = getLabel(elm);
+      context.addChild(elm.getTrackerId().hashCode(), label);
+      super.visitQuery(elm, context);
+      return null;
+    }
+
+    @Override
+    public Void visitRelationshipClause(RelationshipClause elm, ElmGraphTransformationContext context) {
+      context.addChild(elm.getTrackerId().hashCode(), elm.getClass().getSimpleName());
+      super.visitRelationshipClause(elm, context);
+      return null;
+    }
+
+    @Override
+    public Void visitElement(Element elm, ElmGraphTransformationContext context) {
+      context.addChild(elm.getTrackerId().hashCode(), elm.toString());
+      super.visitElement(elm, context);
+      return null;
+    }
+
+    @Override
     public Void visitExpression(Expression elm, ElmGraphTransformationContext context) {
+        if (elm == null) {
+          return null;
+        }
+
         String label = getLabel(elm);
 
         context.addChild(elm.getTrackerId().hashCode(), label);

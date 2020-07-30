@@ -10,10 +10,11 @@ import org.jgrapht.graph.SimpleGraph;
 public class ElmTransformer {
 
     /**
-     * Given an ELM library, and a specific expression definition within that library, resolved references be inlining
-     * expression references. The result is an ELM tree will all references already resolved.
+     * Given an ELM library, and a specific expression definition within that library, resolve references by inlining
+     * expression references. The result is an ELM tree with all references already resolved.
      *
-     * @param expressionDef The express to use as the root of the tree
+     * @param library The library from which all expressions and references can be found
+     * @param expressionDef The expression to use as the root of the tree
      * @return
      */
     public void resolveReferences(Library library, ExpressionDef expressionDef) throws ElmTransformerException {

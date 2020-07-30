@@ -1094,11 +1094,11 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     public T visitAliasedQuerySource(AliasedQuerySource elm, C context) {
         debug("visitAliasedQuerySource");
 
-        context.push(elm);
+        //context.push(elm);
 
         this.visitExpression(elm.getExpression(), context);
 
-        context.pop();
+        //context.pop();
 
         return super.visitAliasedQuerySource(elm, context);
     }
@@ -1112,6 +1112,14 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     @Override
     public T visitRelationshipClause(RelationshipClause elm, C context) {
         debug("visitRelationshipClause");
+
+        context.push(elm);
+
+        this.visitExpression(elm.getSuchThat(), context);
+        this.visitExpression(elm.getExpression(), context);
+
+        context.pop();
+
         return super.visitRelationshipClause(elm, context);
     }
 
@@ -1167,38 +1175,14 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     public T visitQuery(Query elm, C context) {
         debug("visitQuery");
 
-        /*
-            @XmlElement(namespace = "urn:hl7-org:elm:r1", required = true)
-    protected List<AliasedQuerySource> source;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected List<LetClause> let;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected List<RelationshipClause> relationship;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected Expression where;
-    @XmlElement(name = "return", namespace = "urn:hl7-org:elm:r1")
-    protected ReturnClause _return;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected SortClause sort;    @XmlElement(namespace = "urn:hl7-org:elm:r1", required = true)
-    protected List<AliasedQuerySource> source;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected List<LetClause> let;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected List<RelationshipClause> relationship;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected Expression where;
-    @XmlElement(name = "return", namespace = "urn:hl7-org:elm:r1")
-    protected ReturnClause _return;
-    @XmlElement(namespace = "urn:hl7-org:elm:r1")
-    protected SortClause sort;
-         */
         context.push(elm);
 
         elm.getSource().stream().forEach(s -> this.visitAliasedQuerySource(s, context));
+        elm.getLet().stream().forEach(l -> this.visitLetClause(l, context));
+        elm.getRelationship().stream().forEach(r -> this.visitRelationshipClause(r, context));
+        this.visitExpression(elm.getWhere(), context);
 
         context.pop();
-
-
         return super.visitQuery(elm, context);
     }
 
