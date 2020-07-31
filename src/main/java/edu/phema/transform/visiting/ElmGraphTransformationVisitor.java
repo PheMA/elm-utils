@@ -8,15 +8,11 @@ public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTran
         super(true);
     }
 
-    public String buildLabelForQuery(Query query) {
-        return "Query";
-    }
-
     public String getLabel(Expression elm) {
         if (elm instanceof Literal) {
             return ((Literal) elm).getValue();
         } else if (elm instanceof Query) {
-            return buildLabelForQuery((Query) elm);
+            return "Query";
         } else if (elm instanceof Retrieve) {
           return String.format("%s in '%s'", ((Retrieve) elm).getDataType().getLocalPart(), ((ValueSetRef) ((Retrieve) elm).getCodes()).getName());
         } else if (elm instanceof Property) {
@@ -46,8 +42,20 @@ public class ElmGraphTransformationVisitor extends ElmBaseStatementPostOrderTran
     }
 
     @Override
+    public Void visitAliasedQuerySource(AliasedQuerySource elm, ElmGraphTransformationContext context) {
+      context.addChild(elm.getTrackerId().hashCode(), elm.getAlias());
+      super.visitAliasedQuerySource(elm, context);
+      return null;
+    }
+
+    @Override
     public Void visitRelationshipClause(RelationshipClause elm, ElmGraphTransformationContext context) {
-      context.addChild(elm.getTrackerId().hashCode(), elm.getClass().getSimpleName());
+      String label = elm.getClass().getSimpleName();
+      String alias = elm.getAlias();
+      if (alias != null && !alias.trim().equals("")) {
+        label = String.format("%s %s", label, alias);
+      }
+      context.addChild(elm.getTrackerId().hashCode(), label);
       super.visitRelationshipClause(elm, context);
       return null;
     }

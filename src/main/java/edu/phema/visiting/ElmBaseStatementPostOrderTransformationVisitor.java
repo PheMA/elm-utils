@@ -1094,11 +1094,11 @@ public class ElmBaseStatementPostOrderTransformationVisitor<T, C extends ElmBase
     public T visitAliasedQuerySource(AliasedQuerySource elm, C context) {
         debug("visitAliasedQuerySource");
 
-        //context.push(elm);
+        context.push(elm);
 
         this.visitExpression(elm.getExpression(), context);
 
-        //context.pop();
+        context.pop();
 
         return super.visitAliasedQuerySource(elm, context);
     }
