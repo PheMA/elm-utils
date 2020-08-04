@@ -1,4 +1,4 @@
-# PhEMA ELM Util
+# PhEMA ELM Utils
 
 [![Build Status](https://travis-ci.org/PheMA/elm-utils.svg?branch=master)](https://travis-ci.org/PheMA/elm-utils)
 
