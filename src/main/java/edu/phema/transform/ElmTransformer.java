@@ -61,4 +61,16 @@ public class ElmTransformer {
             throw new ElmTransformerException("Failed to generate DOT graph", e);
         }
     }
+
+    public String getVisualization(Library library, ExpressionDef expressionDef) throws ElmTransformerException {
+      ElmVisualizationTransformationContext context = new ElmVisualizationTransformationContext(expressionDef.hashCode(), expressionDef.getName());
+      ElmVisualizationTransformationVisitor visitor = new ElmVisualizationTransformationVisitor();
+      visitor.visitExpression(expressionDef.getExpression(), context);
+
+      try {
+        return context.getVisualizationStructure();
+      } catch (Exception e) {
+        throw new ElmTransformerException("Failed to generate DOT graph", e);
+      }
+    }
 }

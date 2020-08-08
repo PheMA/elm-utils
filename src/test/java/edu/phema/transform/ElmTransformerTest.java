@@ -58,4 +58,12 @@ public class ElmTransformerTest {
 
         System.out.println(graph);
     }
+
+    @Test
+    public void hfVisualization() throws Exception {
+      ElmTransformer transformer = new ElmTransformer();
+      ExpressionDef statement = elmUtil.getStatementByName(library, "HF Case");
+      String graph = transformer.getVisualization(library, statement);
+      System.out.println(graph);
+    }
 }
