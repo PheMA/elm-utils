@@ -10,6 +10,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ElmQuantities {
+  // Used to count both simple and clinical values
+  public static class LiteralCounts {
+    public int total;
+    public Set<String> types = new HashSet<>();
+  }
+
   public static class ExpressionCounts {
     public int unary;
     public int binary;
@@ -102,6 +108,11 @@ public class ElmQuantities {
   public static class ComparisonCounts {
     public int equal;
     public int equivalent;
+    public int notEqual;
+    public int less;
+    public int greater;
+    public int lessOrEqual;
+    public int greaterOrEqual;
   }
 
   public static class ClinicalOperatorCounts {
@@ -114,6 +125,84 @@ public class ElmQuantities {
     public int calculateAgeAt;
   }
 
+  public static class ArithmeticOperatorCounts {
+    public int add;
+    public int subtract;
+    public int multiply;
+    public int divide;
+    public int truncatedDivide;
+    public int modulo;
+    public int ceiling;
+    public int floor;
+    public int truncate;
+    public int abs;
+    public int negate;
+    public int round;
+    public int ln;
+    public int exp;
+    public int log;
+    public int power;
+    public int successor;
+    public int predecessor;
+    public int minValue;
+    public int maxValue;
+  }
+
+  // 14 operators
+  public static class DateTimeOperatorCounts {
+    public int durationBetween;
+    public int differenceBetween;
+    public int dateFrom;
+    public int timeFrom;
+    public int timezoneOffsetFrom;
+    public int dateTimeComponentFrom;
+    public int timeOfDay;
+    public int today;
+    public int now;
+    public int dateTime;
+    public int time;
+    public int sameAs;
+    public int sameOrBefore;
+    public int sameOrAfter;
+  }
+
+  // 14 operators
+  public static class QueryOperatorCounts {
+    public int aliasedQuerySource;
+    public int letClause;
+    public int relationshipClause;
+    public int with;
+    public int without;
+    public int sortByItem;
+    public int byDirection;
+    public int byColumn;
+    public int byExpression;
+    public int sortClause;
+    public int returnClause;
+    public int query;
+    public int aliasRef;
+    public int queryLetRef;
+  }
+
+  // 14 operators
+  public static class AggregateOperatorCounts {
+    public int aggregateExpression;
+    public int count;
+    public int sum;
+    public int min;
+    public int max;
+    public int avg;
+    public int median;
+    public int mode;
+    public int variance;
+    public int populationVariance;
+    public int stdDev;
+    public int populationStdDev;
+    public int allTrue;
+    public int anyTrue;
+  }
+
+  public LiteralCounts literalCounts = new LiteralCounts();
   public ExpressionCounts expressionCounts = new ExpressionCounts();
   public TypeSpecifierCounts typeSpecifierCounts = new TypeSpecifierCounts();
   public StatementCounts statementCounts = new StatementCounts();
@@ -129,6 +218,8 @@ public class ElmQuantities {
   public ClinicalOperatorCounts clinicalOperatorCounts = new ClinicalOperatorCounts();
   public NullologicalCounts nullologicalCounts = new NullologicalCounts();
   public ConditionalCounts conditionalCounts = new ConditionalCounts();
+  public ArithmeticOperatorCounts arithmeticOperatorCounts = new ArithmeticOperatorCounts();
+
 
   @JsonIgnore
   public String getJson() throws JsonProcessingException {
