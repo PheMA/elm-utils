@@ -57,4 +57,9 @@ public class ElmQuantifierTest {
   public void simpleDateInterval() throws Exception {
     runTest("cql/quantify/quantify-simple.cql", "SimpleDateInterval");
   }
+
+  @Test
+  public void simpleAg() throws Exception {
+    runTest("cql/quantify/quantify-simple.cql", "SimpleAg");
+  }
 }

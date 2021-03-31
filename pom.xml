@@ -19,6 +19,7 @@
         <bintray.subject>phema</bintray.subject>
         <bintray.repo>maven</bintray.repo>
         <bintray.package>elm-utils</bintray.package>
+        <hapi.fhir.version>5.3.0</hapi.fhir.version>
     </properties>
 
     <repositories>
@@ -111,6 +112,13 @@
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-io</artifactId>
             <version>${jgrapht.version}</version>
+        </dependency>
+
+        <!-- FHIR -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-r4</artifactId>
+            <version>${hapi.fhir.version}</version>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,572 @@
+{
+  "resourceType": "Bundle",
+  "type": "batch",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Organization",
+        "id": "phema-org",
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:b4c8ce08-2722-4406-93d5-00196e483fa6"
+          }
+        ],
+        "active": true,
+        "name": "Phenotype Execution & Modeling Architecture (PhEMA)",
+        "alias": "PhEMA",
+        "telecom": [
+          {
+            "system": "url",
+            "value": "https://projectphema.org/"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/phema-org"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Binary",
+        "id": "metadata-162.autism",
+        "contentType": "application/json",
+        "data": "eyJ1cmwiOiJodHRwczovL3BoZWtiLm9yZy9waGVub3R5cGUvMTYyIiwibmFtZSI6IkF1dGlzbSIsInNsdWciOiJhdXRpc20iLCJpZCI6IjE2MiIsInR5cGUiOlsiRGlzZWFzZSBvciBTeW5kcm9tZSJdLCJzdGF0dXMiOiJGaW5hbCIsImNvbGxhYm9yYXRpb25fbGlzdCI6ZmFsc2UsInN1bW1hcnkiOiIiLCJhdXRob3JzIjpbIlRvZGQgTGluZ3JlbiJdLCJjb250YWN0X2F1dGhvciI6IlRvZGQgTGluZ3JlbiIsImFnZSI6WyJQZWRpYXRyaWMiXSwiZGF0YV9tb2RhbGl0aWVzIjpbIklDRCA5IENvZGVzIiwiTWVkaWNhdGlvbnMiLCJOYXR1cmFsIExhbmd1YWdlIFByb2Nlc3NpbmciXSwiZ2VuZGVyIjpbIkZlbWFsZSIsIk1hbGUiXSwiZXRobmljaXR5IjpbXSwiZGF0ZV9jcmVhdGVkIjoiMjAxMy0wNC0xNlQwMDowMDowMC0wNzowMCIsImluc3RpdHV0aW9uIjpbIkNpbmNpbm5hdGkgQ2hpbGRyZW4ncyBIb3NwaXRhbCBNZWRpY2FsIENlbnRlciJdLCJuZXR3b3JrX2Fzc29jaWF0aW9ucyI6WyJlTUVSR0UiXSwib3duZXJfZ3JvdXBzIjpbImVNRVJHRSBDQ0hNQy9CQ0ggR3JvdXAiXSwidmlld19ncm91cHMiOlsiZU1FUkdFIFBoZW5vdHlwZSBXRyJdLCJyYWNlIjpbXSwiZGF0YV9tb2RlbHMiOltdLCJzdWdnZXN0ZWRfY2l0YXRpb24iOiJUb2RkIExpbmdyZW4uIENpbmNpbm5hdGkgQ2hpbGRyZW4ncyBIb3NwaXRhbCBNZWRpY2FsIENlbnRlci4gQXV0aXNtLiBQaGVLQjsgMjAxMyBBdmFpbGFibGUgZnJvbTogaHR0cHM6Ly9waGVrYi5vcmcvcGhlbm90eXBlLzE2MiIsInJlZmVyZW5jZXMiOlt7InNvdXJjZSI6IlB1Yk1lZCIsImFjY2Vzc2VkIjp7ImRhdGUtcGFydHMiOltbMjAyMCwxMiwxMV1dfSwiaWQiOiJwbWlkOjI3NDcyNDQ5IiwidGl0bGUiOiJFbGVjdHJvbmljIEhlYWx0aCBSZWNvcmQgQmFzZWQgQWxnb3JpdGhtIHRvIElkZW50aWZ5IFBhdGllbnRzIHdpdGggQXV0aXNtIFNwZWN0cnVtIERpc29yZGVyIiwiYXV0aG9yIjpbeyJmYW1pbHkiOiJMaW5ncmVuIiwiZ2l2ZW4iOiJUb2RkIn0seyJmYW1pbHkiOiJDaGVuIiwiZ2l2ZW4iOiJQZWkifSx7ImZhbWlseSI6IkJvY2hlbmVrIiwiZ2l2ZW4iOiJKb3NlcGgifSx7ImZhbWlseSI6IkRvc2hpLVZlbGV6IiwiZ2l2ZW4iOiJGaW5hbGUifSx7ImZhbWlseSI6Ik1hbm5pbmctQ291cnRuZXkiLCJnaXZlbiI6IlBhdHR5In0seyJmYW1pbHkiOiJCaWNrZWwiLCJnaXZlbiI6Ikp1bGllIn0seyJmYW1pbHkiOiJXaWxkZW5nZXIgV2VsY2hvbnMiLCJnaXZlbiI6IkxlYWgifSx7ImZhbWlseSI6IlJlaW5ob2xkIiwiZ2l2ZW4iOiJKdWR5In0seyJmYW1pbHkiOiJCaW5nIiwiZ2l2ZW4iOiJOaWNvbGUifSx7ImZhbWlseSI6Ik5pIiwiZ2l2ZW4iOiJZaXpoYW8ifSx7ImZhbWlseSI6IkJhcmJhcmVzaSIsImdpdmVuIjoiV2lsbGlhbSJ9LHsiZmFtaWx5IjoiTWVudGNoIiwiZ2l2ZW4iOiJGcmFuayJ9LHsiZmFtaWx5IjoiQmFzZm9yZCIsImdpdmVuIjoiTWVsaXNzYSJ9LHsiZmFtaWx5IjoiRGVubnkiLCJnaXZlbiI6Ikpvc2h1YSJ9LHsiZmFtaWx5IjoiVmF6cXVleiIsImdpdmVuIjoiTHlhbSJ9LHsiZmFtaWx5IjoiUGVycnkiLCJnaXZlbiI6IkNhc3NhbmRyYSJ9LHsiZmFtaWx5IjoiTmFtam91IiwiZ2l2ZW4iOiJCYWhyYW0ifSx7ImZhbWlseSI6IlFpdSIsImdpdmVuIjoiSGFpanVuIn0seyJmYW1pbHkiOiJDb25ub2xseSIsImdpdmVuIjoiSm9obiJ9LHsiZmFtaWx5IjoiQWJyYW1zIiwiZ2l2ZW4iOiJEZWJyYSJ9LHsiZmFtaWx5IjoiSG9sbSIsImdpdmVuIjoiSW5ncmlkIEEifSx7ImZhbWlseSI6IkNvYmIiLCJnaXZlbiI6IkJldGggQSJ9LHsiZmFtaWx5IjoiTGluZ3JlbiIsImdpdmVuIjoiTmF0YWxpbmUifSx7ImZhbWlseSI6IlNvbHRpIiwiZ2l2ZW4iOiJJbXJlIn0seyJmYW1pbHkiOiJIYWtvbmFyc29uIiwiZ2l2ZW4iOiJIYWtvbiJ9LHsiZmFtaWx5IjoiS29oYW5lIiwiZ2l2ZW4iOiJJc2FhYyBTIn0seyJmYW1pbHkiOiJIYXJsZXkiLCJnaXZlbiI6IkpvaG4ifSx7ImZhbWlseSI6IlNhdm92YSIsImdpdmVuIjoiR3VlcmdhbmEifV0sImNvbnRhaW5lci10aXRsZS1zaG9ydCI6IlBMb1MgT25lIiwiY29udGFpbmVyLXRpdGxlIjoiUGxvUyBvbmUiLCJwdWJsaXNoZXIiOiJQdWJsaWMgTGlicmFyeSBvZiBTY2llbmNlIiwiSVNTTiI6IjE5MzItNjIwMyIsImlzc3VlZCI6eyJkYXRlLXBhcnRzIjpbWzIwMTYsNywyOV1dfSwicGFnZSI6ImUwMTU5NjIxIiwidm9sdW1lIjoiMTEiLCJpc3N1ZSI6IjciLCJQTUlEIjoiMjc0NzI0NDkiLCJQTUNJRCI6IlBNQzQ5NjY5NjkiLCJET0kiOiIxMC4xMzcxL2pvdXJuYWwucG9uZS4wMTU5NjIxIiwidHlwZSI6ImFydGljbGUtam91cm5hbCJ9XSwiZmlsZXMiOlt7Im5hbWUiOiJOYXJyYXRpdmUgRGVzY3JpcHRpb24gb2YgQWxnb3JpdGhtIiwidXJsIjoiL2ZpbGVzL0F1dGlzbUFsZ29yaXRobV9jb21wbGV0ZV92Mi5wZGYiLCJ0eXBlIjoiYXBwbGljYXRpb24vcGRmIiwibGVuZ3RoIjoyNjgzODl9LHsibmFtZSI6Ikdsb3NzYXJ5IG9mIFRlcm1zIGFuZCBDYXRlZ29yaWVzIGZvciBBdXRpc20sIG5vdCBmb3IgZGlzdHJpYnV0aW9uIG91dHNpZGUgZU1FUkdFIiwidXJsIjoiL2ZpbGVzL0F1dGlzbSUyMGdsb3NzYXJ5JTIwb2YlMjB0ZXJtcy5wZGYiLCJ0eXBlIjoiYXBwbGljYXRpb24vcGRmIiwibGVuZ3RoIjo1NTA2MjF9LHsibmFtZSI6IkF1dGlzbSBEYXRhIERpY3Rpb25hcnkgMS03LTIwMTQiLCJ1cmwiOiIvZmlsZXMvQXV0aXNtX0RhdGFEaWN0aW9uYXJ5X3Y0Lnhsc3giLCJ0eXBlIjoiYXBwbGljYXRpb24vdm5kLm9wZW54bWxmb3JtYXRzLW9mZmljZWRvY3VtZW50LnNwcmVhZHNoZWV0bWwuc2hlZXQiLCJsZW5ndGgiOjU3MTU4fSx7Im5hbWUiOiJGbG93Y2hhcnQgb2YgQWxnb3JpdGhtIC0gd2l0aCBtZW50aW9uIiwidXJsIjoiL2ZpbGVzL2F1dGlzbV9hbGdvcml0aG1fcnVsZV92MDdfbWVudGlvbi5qcGciLCJ0eXBlIjoiaW1hZ2UvanBlZyIsImxlbmd0aCI6NTE2NzA2fV0sImRhdGFfZGljdGlvbmFyaWVzIjpbXSwiaW1wbGVtZW50YXRpb25zIjpbeyJ0aXRsZSI6IkF1dGlzbSBWYWxpZGF0aW9uIiwiaW5zdGl0dXRpb24iOiJDSE9QIiwiYWxnb3JpdGhtX3R5cGUiOiJDYXNlczogNTAgQ29udHJvbHM6IDAgIChDYXNlIE9ubHkpIiwiZGF0ZV91cGxvYWRlZCI6IjA1LzI3LzIwMTQiLCJjYXNlX3BwdiI6bnVsbCwiY29udHJvbF9wcHYiOm51bGwsImZpbGVzIjpbXX0seyJ0aXRsZSI6IkF1dGlzbSBJbXBsZW1lbnRhdGlvbiAtIENvbHVtYmlhIiwiaW5zdGl0dXRpb24iOiJDb2x1bWJpYSBVbml2ZXJzaXR5IiwiYWxnb3JpdGhtX3R5cGUiOiJDYXNlczogMCBDb250cm9sczogMzA4NCAgKENhc2UsIENvbnRyb2wpIiwiZGF0ZV91cGxvYWRlZCI6IjExLzMwLzIwMTciLCJjYXNlX3BwdiI6bnVsbCwiY29udHJvbF9wcHYiOm51bGwsImZpbGVzIjpbXX1dfQ=="
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Binary/metadata-162.autism"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Library",
+        "id": "library-162.autism-1.0.0",
+        "identifier": [
+          {
+            "system": "https://workbench.phema.science/identifier/phenotype-library",
+            "value": "162.autism"
+          }
+        ],
+        "title": "Autism Phenotype Definition",
+        "name": "162.autism",
+        "version": "1.0.0",
+        "dataRequirement": [
+          {
+            "type": "Condition",
+            "codeFilter": [
+              {
+                "path": "code",
+                "valueSet": "162.autism-spectrum-dx"
+              }
+            ]
+          },
+          {
+            "type": "Condition",
+            "codeFilter": [
+              {
+                "path": "code",
+                "valueSet": "162.autism-exclusion-dx"
+              }
+            ]
+          }
+        ],
+        "relatedArtifact": [],
+        "content": [
+          {
+            "contentType": "text/cql",
+            "data": "LyoqCiAqIFBoZUtCIFBoZW5vdHlwZQogKgogKiBOYW1lIDogQXV0aXNtCiAqIElEICAgOiAxNjIKICogVXJsICA6IGh0dHBzOi8vcGhla2Iub3JnL25vZGUvMTYyCiAqLwpsaWJyYXJ5ICIxNjIuYXV0aXNtIiB2ZXJzaW9uICcxLjAuMCcKCnVzaW5nIEZISVIgdmVyc2lvbiAnNC4wLjAnCgp2YWx1ZXNldCAiQXV0aXNtIFNwZWN0cnVtIERpYWdub3NlcyI6ICcxNjIuYXV0aXNtLXNwZWN0cnVtLWR4Jwp2YWx1ZXNldCAiQXV0aXNtIEV4Y2x1c2lvbiBEaWFnbm9zZXMiOiAnMTYyLmF1dGlzbS1leGNsdXNpb24tZHgnCgpjb250ZXh0IFBhdGllbnQKCmRlZmluZSAiSGFzIEF1dGlzbSBEaWFnbm9zaXMiOgogICAgZXhpc3RzKFtDb25kaXRpb246ICJBdXRpc20gU3BlY3RydW0gRGlhZ25vc2VzIl0pCgpkZWZpbmUgIkhhcyBBdXRpc20gRXhjbHVzaW9uIERpYWdub3NpcyI6CiAgICBleGlzdHMoW0NvbmRpdGlvbjogIkF1dGlzbSBFeGNsdXNpb24gRGlhZ25vc2VzIl0pCgpkZWZpbmUgIkNhc2UiOgogICAgIkhhcyBBdXRpc20gRGlhZ25vc2lzIgogICAgICAgIGFuZAogICAgKG5vdCAiSGFzIEF1dGlzbSBFeGNsdXNpb24gRGlhZ25vc2lzIikK"
+          },
+          {
+            "contentType": "application/elm+json",
+            "data": "eyJsaWJyYXJ5Ijp7ImFubm90YXRpb24iOlt7InRyYW5zbGF0b3JPcHRpb25zIjoiIiwidHlwZSI6IkNxbFRvRWxtSW5mbyJ9LHsibGlicmFyeUlkIjoiMTYyLmF1dGlzbSIsImxpYnJhcnlWZXJzaW9uIjoiMS4wLjAiLCJzdGFydExpbmUiOjE4LCJzdGFydENoYXIiOjEyLCJlbmRMaW5lIjoxOCwiZW5kQ2hhciI6NTEsIm1lc3NhZ2UiOiJDb3VsZCBub3QgcmVzb2x2ZSBtZW1iZXJzaGlwIG9wZXJhdG9yIGZvciB0ZXJtaW5vbG9neSB0YXJnZXQgb2YgdGhlIHJldHJpZXZlLiIsImVycm9yVHlwZSI6InNlbWFudGljIiwiZXJyb3JTZXZlcml0eSI6Indhcm5pbmciLCJ0eXBlIjoiQ3FsVG9FbG1FcnJvciJ9LHsibGlicmFyeUlkIjoiMTYyLmF1dGlzbSIsImxpYnJhcnlWZXJzaW9uIjoiMS4wLjAiLCJzdGFydExpbmUiOjIxLCJzdGFydENoYXIiOjEyLCJlbmRMaW5lIjoyMSwiZW5kQ2hhciI6NTIsIm1lc3NhZ2UiOiJDb3VsZCBub3QgcmVzb2x2ZSBtZW1iZXJzaGlwIG9wZXJhdG9yIGZvciB0ZXJtaW5vbG9neSB0YXJnZXQgb2YgdGhlIHJldHJpZXZlLiIsImVycm9yVHlwZSI6InNlbWFudGljIiwiZXJyb3JTZXZlcml0eSI6Indhcm5pbmciLCJ0eXBlIjoiQ3FsVG9FbG1FcnJvciJ9XSwiaWRlbnRpZmllciI6eyJpZCI6IjE2Mi5hdXRpc20iLCJ2ZXJzaW9uIjoiMS4wLjAifSwic2NoZW1hSWRlbnRpZmllciI6eyJpZCI6InVybjpobDctb3JnOmVsbSIsInZlcnNpb24iOiJyMSJ9LCJ1c2luZ3MiOnsiZGVmIjpbeyJsb2NhbElkZW50aWZpZXIiOiJTeXN0ZW0iLCJ1cmkiOiJ1cm46aGw3LW9yZzplbG0tdHlwZXM6cjEifSx7ImxvY2FsSWRlbnRpZmllciI6IkZISVIiLCJ1cmkiOiJodHRwOi8vaGw3Lm9yZy9maGlyIiwidmVyc2lvbiI6IjQuMC4wIn1dfSwidmFsdWVTZXRzIjp7ImRlZiI6W3sibmFtZSI6IkF1dGlzbSBTcGVjdHJ1bSBEaWFnbm9zZXMiLCJpZCI6IjE2Mi5hdXRpc20tc3BlY3RydW0tZHgiLCJhY2Nlc3NMZXZlbCI6IlB1YmxpYyJ9LHsibmFtZSI6IkF1dGlzbSBFeGNsdXNpb24gRGlhZ25vc2VzIiwiaWQiOiIxNjIuYXV0aXNtLWV4Y2x1c2lvbi1keCIsImFjY2Vzc0xldmVsIjoiUHVibGljIn1dfSwiY29udGV4dHMiOnsiZGVmIjpbeyJuYW1lIjoiUGF0aWVudCJ9XX0sInN0YXRlbWVudHMiOnsiZGVmIjpbeyJuYW1lIjoiUGF0aWVudCIsImNvbnRleHQiOiJQYXRpZW50IiwiZXhwcmVzc2lvbiI6eyJ0eXBlIjoiU2luZ2xldG9uRnJvbSIsIm9wZXJhbmQiOnsiZGF0YVR5cGUiOiJ7aHR0cDovL2hsNy5vcmcvZmhpcn1QYXRpZW50IiwidHlwZSI6IlJldHJpZXZlIn19fSx7Im5hbWUiOiJIYXMgQXV0aXNtIERpYWdub3NpcyIsImNvbnRleHQiOiJQYXRpZW50IiwiYWNjZXNzTGV2ZWwiOiJQdWJsaWMiLCJleHByZXNzaW9uIjp7InR5cGUiOiJFeGlzdHMiLCJvcGVyYW5kIjp7ImRhdGFUeXBlIjoie2h0dHA6Ly9obDcub3JnL2ZoaXJ9Q29uZGl0aW9uIiwiY29kZVByb3BlcnR5IjoiY29kZSIsImNvZGVDb21wYXJhdG9yIjoiaW4iLCJ0eXBlIjoiUmV0cmlldmUiLCJjb2RlcyI6eyJuYW1lIjoiQXV0aXNtIFNwZWN0cnVtIERpYWdub3NlcyIsInR5cGUiOiJWYWx1ZVNldFJlZiJ9fX19LHsibmFtZSI6IkhhcyBBdXRpc20gRXhjbHVzaW9uIERpYWdub3NpcyIsImNvbnRleHQiOiJQYXRpZW50IiwiYWNjZXNzTGV2ZWwiOiJQdWJsaWMiLCJleHByZXNzaW9uIjp7InR5cGUiOiJFeGlzdHMiLCJvcGVyYW5kIjp7ImRhdGFUeXBlIjoie2h0dHA6Ly9obDcub3JnL2ZoaXJ9Q29uZGl0aW9uIiwiY29kZVByb3BlcnR5IjoiY29kZSIsImNvZGVDb21wYXJhdG9yIjoiaW4iLCJ0eXBlIjoiUmV0cmlldmUiLCJjb2RlcyI6eyJuYW1lIjoiQXV0aXNtIEV4Y2x1c2lvbiBEaWFnbm9zZXMiLCJ0eXBlIjoiVmFsdWVTZXRSZWYifX19fSx7Im5hbWUiOiJDYXNlIiwiY29udGV4dCI6IlBhdGllbnQiLCJhY2Nlc3NMZXZlbCI6IlB1YmxpYyIsImV4cHJlc3Npb24iOnsidHlwZSI6IkFuZCIsIm9wZXJhbmQiOlt7Im5hbWUiOiJIYXMgQXV0aXNtIERpYWdub3NpcyIsInR5cGUiOiJFeHByZXNzaW9uUmVmIn0seyJ0eXBlIjoiTm90Iiwib3BlcmFuZCI6eyJuYW1lIjoiSGFzIEF1dGlzbSBFeGNsdXNpb24gRGlhZ25vc2lzIiwidHlwZSI6IkV4cHJlc3Npb25SZWYifX1dfX1dfX19"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Library/library-162.autism-1.0.0"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "162.autism-spectrum-dx",
+        "url": "https://workbench.phema.science/fhir/ValueSet/162.autism-spectrum-dx",
+        "name": "Autism Spectrum Diagnoses",
+        "status": "active",
+        "publisher": "Project PhEMA",
+        "compose": {
+          "include": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-9-cm",
+              "concept": [
+                {
+                  "code": "299.00",
+                  "display": "Autistic disorder, current or active state"
+                },
+                {
+                  "code": "299.01",
+                  "display": "Autistic disorder, residual state"
+                },
+                {
+                  "code": "299.0",
+                  "display": "Autistic disorder"
+                },
+                {
+                  "code": "299.8",
+                  "display": "Other specified pervasive developmental disorders"
+                },
+                {
+                  "code": "299.81",
+                  "display": "Other specified pervasive developmental disorders, residual state"
+                },
+                {
+                  "code": "299.80",
+                  "display": "Other specified pervasive developmental disorders, current or active state"
+                },
+                {
+                  "code": "299.90",
+                  "display": "Unspecified pervasive developmental disorder, current or active state"
+                },
+                {
+                  "code": "299.91",
+                  "display": "Unspecified pervasive developmental disorder, residual state"
+                },
+                {
+                  "code": "299.9",
+                  "display": "Unspecified pervasive developmental disorder"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "ValueSet/162.autism-spectrum-dx"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "162.autism-exclusion-dx",
+        "url": "https://workbench.phema.science/fhir/ValueSet/162.autism-exclusion-dx",
+        "name": "Autism Exclusion Diagnoses",
+        "status": "active",
+        "publisher": "Project PhEMA",
+        "compose": {
+          "include": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-9-cm",
+              "concept": [
+                {
+                  "code": "299.1",
+                  "display": "Childhood disintegrative disorder"
+                },
+                {
+                  "code": "295.72",
+                  "display": "Schizoaffective disorder, chronic"
+                },
+                {
+                  "code": "295.94",
+                  "display": "Unspecified schizophrenia, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.00",
+                  "display": "Simple type schizophrenia, unspecified"
+                },
+                {
+                  "code": "295.15",
+                  "display": "Disorganized type schizophrenia, in remission"
+                },
+                {
+                  "code": "295.53",
+                  "display": "Latent schizophrenia, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.6",
+                  "display": "Residual type schizophrenic disorders"
+                },
+                {
+                  "code": "295.7",
+                  "display": "Schizoaffective disorder"
+                },
+                {
+                  "code": "295.30",
+                  "display": "Paranoid type schizophrenia, unspecified"
+                },
+                {
+                  "code": "295.31",
+                  "display": "Paranoid type schizophrenia, subchronic"
+                },
+                {
+                  "code": "295.54",
+                  "display": "Latent schizophrenia, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.64",
+                  "display": "Schizophrenic disorders, residual type, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.95",
+                  "display": "Unspecified schizophrenia, in remission"
+                },
+                {
+                  "code": "295.02",
+                  "display": "Simple type schizophrenia, chronic"
+                },
+                {
+                  "code": "295.25",
+                  "display": "Catatonic type schizophrenia, in remission"
+                },
+                {
+                  "code": "295.34",
+                  "display": "Paranoid type schizophrenia, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.10",
+                  "display": "Disorganized type schizophrenia, unspecified"
+                },
+                {
+                  "code": "295.4",
+                  "display": "Schizophreniform disorder"
+                },
+                {
+                  "code": "295.42",
+                  "display": "Schizophreniform disorder, chronic"
+                },
+                {
+                  "code": "295.81",
+                  "display": "Other specified types of schizophrenia, subchronic"
+                },
+                {
+                  "code": "295.9",
+                  "display": "Unspecified schizophrenia"
+                },
+                {
+                  "code": "295.12",
+                  "display": "Disorganized type schizophrenia, chronic"
+                },
+                {
+                  "code": "295.60",
+                  "display": "Schizophrenic disorders, residual type, unspecified"
+                },
+                {
+                  "code": "295.91",
+                  "display": "Unspecified schizophrenia, subchronic"
+                },
+                {
+                  "code": "295.92",
+                  "display": "Unspecified schizophrenia, chronic"
+                },
+                {
+                  "code": "295.01",
+                  "display": "Simple type schizophrenia, subchronic"
+                },
+                {
+                  "code": "295.11",
+                  "display": "Disorganized type schizophrenia, subchronic"
+                },
+                {
+                  "code": "295.14",
+                  "display": "Disorganized type schizophrenia, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.20",
+                  "display": "Catatonic type schizophrenia, unspecified"
+                },
+                {
+                  "code": "295.33",
+                  "display": "Paranoid type schizophrenia, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.35",
+                  "display": "Paranoid type schizophrenia, in remission"
+                },
+                {
+                  "code": "295.8",
+                  "display": "Other specified types of schizophrenia"
+                },
+                {
+                  "code": "295.22",
+                  "display": "Catatonic type schizophrenia, chronic"
+                },
+                {
+                  "code": "295.32",
+                  "display": "Paranoid type schizophrenia, chronic"
+                },
+                {
+                  "code": "295.40",
+                  "display": "Schizophreniform disorder, unspecified"
+                },
+                {
+                  "code": "295.52",
+                  "display": "Latent schizophrenia, chronic"
+                },
+                {
+                  "code": "295.55",
+                  "display": "Latent schizophrenia, in remission"
+                },
+                {
+                  "code": "295.63",
+                  "display": "Schizophrenic disorders, residual type, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.74",
+                  "display": "Schizoaffective disorder, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.03",
+                  "display": "Simple type schizophrenia, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.23",
+                  "display": "Catatonic type schizophrenia, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.44",
+                  "display": "Schizophreniform disorder, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.51",
+                  "display": "Latent schizophrenia, subchronic"
+                },
+                {
+                  "code": "295.65",
+                  "display": "Schizophrenic disorders, residual type, in remission"
+                },
+                {
+                  "code": "295",
+                  "display": "Schizophrenic disorders"
+                },
+                {
+                  "code": "295.5",
+                  "display": "Latent schizophrenia"
+                },
+                {
+                  "code": "295.62",
+                  "display": "Schizophrenic disorders, residual type, chronic"
+                },
+                {
+                  "code": "295.90",
+                  "display": "Unspecified schizophrenia, unspecified"
+                },
+                {
+                  "code": "295.1",
+                  "display": "Disorganized type schizophrenia"
+                },
+                {
+                  "code": "295.80",
+                  "display": "Other specified types of schizophrenia, unspecified"
+                },
+                {
+                  "code": "295.83",
+                  "display": "Other specified types of schizophrenia, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.0",
+                  "display": "Simple type schizophrenia"
+                },
+                {
+                  "code": "295.04",
+                  "display": "Simple type schizophrenia, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.13",
+                  "display": "Disorganized type schizophrenia, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.24",
+                  "display": "Catatonic type schizophrenia, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.61",
+                  "display": "Schizophrenic disorders, residual type, subchronic"
+                },
+                {
+                  "code": "295.73",
+                  "display": "Schizoaffective disorder, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.75",
+                  "display": "Schizoaffective disorder, in remission"
+                },
+                {
+                  "code": "295.84",
+                  "display": "Other specified types of schizophrenia, chronic with acute exacerbation"
+                },
+                {
+                  "code": "295.82",
+                  "display": "Other specified types of schizophrenia, chronic"
+                },
+                {
+                  "code": "295.21",
+                  "display": "Catatonic type schizophrenia, subchronic"
+                },
+                {
+                  "code": "295.71",
+                  "display": "Schizoaffective disorder, subchronic"
+                },
+                {
+                  "code": "295.93",
+                  "display": "Unspecified schizophrenia, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.05",
+                  "display": "Simple type schizophrenia, in remission"
+                },
+                {
+                  "code": "295.2",
+                  "display": "Catatonic type schizophrenia"
+                },
+                {
+                  "code": "295.3",
+                  "display": "Paranoid type schizophrenia"
+                },
+                {
+                  "code": "295.41",
+                  "display": "Schizophreniform disorder, subchronic"
+                },
+                {
+                  "code": "295.70",
+                  "display": "Schizoaffective disorder, unspecified"
+                },
+                {
+                  "code": "295.43",
+                  "display": "Schizophreniform disorder, subchronic with acute exacerbation"
+                },
+                {
+                  "code": "295.45",
+                  "display": "Schizophreniform disorder, in remission"
+                },
+                {
+                  "code": "295.50",
+                  "display": "Latent schizophrenia, unspecified"
+                },
+                {
+                  "code": "295.85",
+                  "display": "Other specified types of schizophrenia, in remission"
+                },
+                {
+                  "code": "330.8",
+                  "display": "Other specified cerebral degenerations in childhood"
+                },
+                {
+                  "code": "759.5",
+                  "display": "Tuberous sclerosis"
+                },
+                {
+                  "code": "759.83",
+                  "display": "Fragile X syndrome"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "ValueSet/162.autism-exclusion-dx"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Composition",
+        "id": "phema-162.autism-1.0.0",
+        "identifier": [
+          {
+            "system": "https://workbench.phema.science/identifier/phenotype",
+            "value": "162.autism"
+          }
+        ],
+        "status": "preliminary",
+        "date": "2021-03-19T16:29:10-07:00",
+        "type": {
+          "coding": [
+            {
+              "system": "http://ncimeta.nci.nih.gov",
+              "code": "C166209"
+            }
+          ]
+        },
+        "title": "Autism Phenotype Definition",
+        "author": [
+          {
+            "reference": "Organization/phema-org"
+          }
+        ],
+        "custodian": {
+          "reference": "Organization/phema-org"
+        },
+        "relatesTo": [
+          {
+            "code": "appends",
+            "targetIdentifier": {
+              "system": "urn:ietf:rfc:3986",
+              "value": "https://phekb.org/phenotype/162"
+            }
+          }
+        ],
+        "section": [
+          {
+            "title": "Phenotype Entry Point",
+            "text": {
+              "div": "The CQL library containing the phenotype 'Case' definition. The referenced Binary resource contains phenotype metadata from PheKB."
+            },
+            "author": [
+              {
+                "reference": "Organization/phema-org"
+              }
+            ],
+            "entry": [
+              {
+                "reference": "Library/library-162.autism-1.0.0"
+              },
+              {
+                "reference": "Binary/metadata-162.autism"
+              }
+            ]
+          },
+          {
+            "title": "Dependent value set: 162.autism-spectrum-dx",
+            "text": {
+              "div": "Value set that the main phenotype entry point or one of its dependencies uses"
+            },
+            "author": [
+              {
+                "reference": "Organization/phema-org"
+              }
+            ],
+            "entry": [
+              {
+                "reference": "ValueSet/162.autism-spectrum-dx"
+              }
+            ]
+          },
+          {
+            "title": "Dependent value set: 162.autism-exclusion-dx",
+            "text": {
+              "div": "Value set that the main phenotype entry point or one of its dependencies uses"
+            },
+            "author": [
+              {
+                "reference": "Organization/phema-org"
+              }
+            ],
+            "entry": [
+              {
+                "reference": "ValueSet/162.autism-exclusion-dx"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Composition/phema-162.autism-1.0.0"
+      }
+    }
+  ]
+}

@@ -10,18 +10,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class ElmQuantities {
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // DERIVED COUNTS: The stuff we want to report
+  //
+  /////////////////////////////////////////////////////////////////////////////
+
   // Used to count both simple and clinical values
   public static class LiteralCounts {
     public int total;
     public Set<String> types = new HashSet<>();
-  }
-
-  public static class ExpressionCounts {
-    public int unary;
-    public int binary;
-    public int ternary;
-    public int nary;
-    public int aggregate;
   }
 
   public static class LogicalExpressionCounts {
@@ -30,6 +28,39 @@ public class ElmQuantities {
     public int not;
     public int implies;
     public int xor;
+  }
+
+  public static class Depths {
+    public static int expression;
+    public static int logical;
+    public static int temporal;
+    public static int arithmetic;
+    public static int comparison;
+    public static int query;
+  }
+
+  public static class MaxDepths {
+    public static int expression;
+    public static int logical;
+    public static int temporal;
+    public static int arithmetic;
+    public static int comparison;
+    public static int query;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // AUTOMATIC COUNTS: Raw ELM node counts
+  //
+  /////////////////////////////////////////////////////////////////////////////
+
+  public static class ExpressionCounts {
+    public int expression;
+    public int unary;
+    public int binary;
+    public int ternary;
+    public int nary;
+    public int aggregate;
   }
 
   public static class TypeSpecifierCounts {

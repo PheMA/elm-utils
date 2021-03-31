@@ -16,3 +16,6 @@ define SimpleRetrieve:
 
 define SimpleDateInterval:
     @2018-01-01 in Interval[@2019-01-01 - 2 years, @2019-01-01 + 2 years]
+
+define SimpleAg:
+    Count([MedicationRequest: "Anticoagulant"]) >=2

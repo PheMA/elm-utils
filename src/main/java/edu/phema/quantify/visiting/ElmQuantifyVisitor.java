@@ -41,9 +41,14 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     }
   }
 
+  protected void debug(String method, Object o) {
+    if (debug) {
+      System.out.printf("In method: %s, visiting: %s%n", method, o.getClass().getName());
+    }
+  }
+
   protected void warn(String s) {
-    // Mute warnings for now
-    // System.out.println(s);
+    System.out.println("WARNING: " + s);
   }
   //</editor-fold>
 
@@ -80,6 +85,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitBinaryExpression(BinaryExpression elm, ElmQuantifyContext context) {
+    this.debug("visitBinaryExpression", elm);
     context.getQuantities().expressionCounts.binary++;
     return super.visitBinaryExpression(elm, context);
   }
@@ -91,6 +97,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitExpression(Expression elm, ElmQuantifyContext context) {
+    this.debug("visitExpression", elm);
+    context.getQuantities().expressionCounts.expression++;
     return super.visitExpression(elm, context);
   }
 
@@ -124,6 +132,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitAggregateExpression(AggregateExpression elm, ElmQuantifyContext context) {
+    context.getQuantities().expressionCounts.aggregate++;
     return super.visitAggregateExpression(elm, context);
   }
   //</editor-fold>
@@ -137,10 +146,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitLiteral(Literal elm, ElmQuantifyContext context) {
-    context.getQuantities().literalCounts.total++;
+    // Don't count literals in dates
+    if (!context.isInDate()) {
+      context.getQuantities().literalCounts.total++;
 
-    String type = elm.getValueType().getLocalPart();
-    context.getQuantities().literalCounts.types.add(type);
+      String type = elm.getValueType().getLocalPart();
+      context.getQuantities().literalCounts.types.add(type);
+    }
 
     // Evaluating a literal
     return super.visitLiteral(elm, context);
@@ -199,6 +211,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitCodeSystemDef(CodeSystemDef elm, ElmQuantifyContext context) {
+    // Ignore code system definitions and references, focus on value sets and codes
     context.getQuantities().clinicalValueCounts.codeSystemDefinition++;
 
     return super.visitCodeSystemDef(elm, context);
@@ -206,6 +219,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitValueSetDef(ValueSetDef elm, ElmQuantifyContext context) {
+    // Ignore, count when referenced
     context.getQuantities().clinicalValueCounts.valueSetDefinition++;
 
     return super.visitValueSetDef(elm, context);
@@ -213,6 +227,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitCodeSystemRef(CodeSystemRef elm, ElmQuantifyContext context) {
+    // Ignore this since we don't really reference code systems
     context.getQuantities().clinicalValueCounts.codeSystemReference++;
 
     return super.visitCodeSystemRef(elm, context);
@@ -243,11 +258,18 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitQuantity(Quantity elm, ElmQuantifyContext context) {
     context.getQuantities().clinicalValueCounts.quantity++;
 
+    context.getQuantities().literalCounts.total++;
+    context.getQuantities().literalCounts.types.add("Quantity (" + elm.getUnit() + ")");
+
     return super.visitQuantity(elm, context);
   }
 
   @Override
   public Void visitRatio(Ratio elm, ElmQuantifyContext context) {
+
+    context.getQuantities().literalCounts.total++;
+    context.getQuantities().literalCounts.types.add("Ratio (" + elm.getNumerator().getUnit() + "/" + elm.getDenominator().getUnit() + ")");
+
     return super.visitRatio(elm, context);
   }
 
@@ -394,6 +416,26 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitExpressionRef(ExpressionRef elm, ElmQuantifyContext context) {
     // Calling another define statement
     context.getQuantities().statementCounts.reference++;
+
+    try {
+      // TODO:
+      // Push the current library ID here so we can know where to
+      // find refs later that have a libraryName of null
+
+      if (elm.getLibraryName() != null) {
+        context.pushLibrary(elm.getLibraryName());
+      }
+
+      ExpressionDef def = context.getPhenotype().getExpressionDef(context.currentLibrary(), elm.getName());
+
+      visitExpressionDef(def, context);
+
+      if (elm.getLibraryName() != null) {
+        context.popLibrary();
+      }
+    } catch (Exception e) {
+      warn(e.getMessage());
+    }
 
     return super.visitExpressionRef(elm, context);
   }
@@ -991,12 +1033,26 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitDateTime(DateTime elm, ElmQuantifyContext context) {
-    return super.visitDateTime(elm, context);
+    context.setInDate(true);
+    super.visitDateTime(elm, context);
+    context.setInDate(false);
+
+    context.getQuantities().literalCounts.total++;
+    context.getQuantities().literalCounts.types.add("DateTime");
+
+    return null;
   }
 
   @Override
   public Void visitTime(Time elm, ElmQuantifyContext context) {
-    return super.visitTime(elm, context);
+    context.setInDate(true);
+    super.visitTime(elm, context);
+    context.setInDate(false);
+
+    context.getQuantities().literalCounts.total++;
+    context.getQuantities().literalCounts.types.add("Time");
+
+    return null;
   }
 
   @Override
@@ -1021,7 +1077,14 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitDate(Date elm, ElmQuantifyContext context) {
-    return super.visitDate(elm, context);
+    context.setInDate(true);
+    super.visitDate(elm, context);
+    context.setInDate(false);
+
+    context.getQuantities().literalCounts.total++;
+    context.getQuantities().literalCounts.types.add("Date");
+
+    return null;
   }
   //</editor-fold>
 
