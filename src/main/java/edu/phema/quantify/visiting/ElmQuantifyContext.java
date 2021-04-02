@@ -39,9 +39,6 @@ public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationC
   private Library library;
   private ElmQuantities quantities;
 
-  // Used to prevent counting literals inside dates
-  private boolean inDate;
-
   public void setLibrary(Library library) {
     this.library = library;
   }
@@ -50,23 +47,13 @@ public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationC
     this.quantities = quantities;
   }
 
-  public boolean isInDate() {
-    return inDate;
-  }
-
-  public void setInDate(boolean inDate) {
-    this.inDate = inDate;
-  }
 
   public ElmQuantifyContext(Library library) {
-    this.inDate = false;
     this.library = library;
     this.quantities = new ElmQuantities();
   }
 
   public ElmQuantifyContext(Library library, Phenotype phenotype) throws ElmQuantifierException {
-    this.inDate = false;
-
     this.library = library;
     this.phenotype = phenotype;
 
