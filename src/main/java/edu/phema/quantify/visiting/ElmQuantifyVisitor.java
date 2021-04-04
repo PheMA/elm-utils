@@ -2,10 +2,8 @@ package edu.phema.quantify.visiting;
 
 import edu.phema.quantify.ElmQuantifierException;
 import edu.phema.quantify.ElmQuantities;
-import edu.phema.visiting.ElmBaseStatementPostOrderTransformationVisitor;
 import org.cqframework.cql.elm.tracking.Trackable;
 import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
-import org.cqframework.cql.elm.visiting.ElmBaseVisitor;
 import org.hl7.cql.model.DataType;
 import org.hl7.elm.r1.*;
 
@@ -45,6 +43,12 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   protected void debug(String method, Object o) {
     if (debug) {
       System.out.printf("In method: %s, visiting: %s%n", method, o.getClass().getName());
+    }
+  }
+
+  public void debug_msg(String msg) {
+    if (debug) {
+      System.out.println(msg);
     }
   }
 
@@ -102,7 +106,65 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitExpression(Expression elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmExpressionCounts.expression++;
-    return super.visitExpression(elm, context);
+
+    // Count and increment depth for PhEMA expressions
+    if (isPhemaLogicalExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaLogicalDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else if (isPhemaComparisonExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaComparisonDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else if (isPhemaArithmeticExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaArithmeticDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else if (isPhemaAggregateExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaAggregateDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else if (isPhemaConditionalExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaConditionalDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else if (isPhemaTemporalExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaTemporalDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else if (isPhemaTerminologyExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaTerminologyDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else if (isPhemaCollectionExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaCollectionDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
+    } else {
+      debug_msg("Not increasing depth for expression: " + elm.getClass().getName());
+    }
+
+    super.visitExpression(elm, context);
+
+    if (isPhemaLogicalExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaLogicalDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    } else if (isPhemaComparisonExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaComparisonDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    } else if (isPhemaArithmeticExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaArithmeticDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    } else if (isPhemaAggregateExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaAggregateDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    } else if (isPhemaConditionalExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaConditionalDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    } else if (isPhemaTemporalExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaTemporalDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    } else if (isPhemaTerminologyExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaTerminologyDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    } else if (isPhemaCollectionExpression(elm)) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaCollectionDepth);
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
+    }
+
+    return null;
   }
 
   @Override
@@ -161,9 +223,9 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     context.getQuantities().elmLiteralCounts.literal++;
 
     // PhEMA counts
-    context.getQuantities().phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
     String type = elm.getValueType().getLocalPart();
-    context.getQuantities().phemaLiteralCounts.types.add(type);
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add(type);
 
     return super.visitLiteral(elm, context);
   }
@@ -281,8 +343,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     context.getQuantities().elmClinicalValueCounts.quantity++;
 
     // PhEMA Counts
-    context.getQuantities().phemaLiteralCounts.total++;
-    context.getQuantities().phemaLiteralCounts.types.add("Quantity (" + elm.getUnit() + ")");
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Quantity (" + elm.getUnit() + ")");
 
     return super.visitQuantity(elm, context);
   }
@@ -293,8 +355,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     context.getQuantities().elmClinicalValueCounts.ratio++;
 
     // PhEMA Counts
-    context.getQuantities().phemaLiteralCounts.total++;
-    context.getQuantities().phemaLiteralCounts.types.add("Ratio (" + elm.getNumerator().getUnit() + "/" + elm.getDenominator().getUnit() + ")");
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Ratio (" + elm.getNumerator().getUnit() + "/" + elm.getDenominator().getUnit() + ")");
 
     return super.visitRatio(elm, context);
   }
@@ -479,7 +541,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
         context.pushLibrary(elm.getLibraryName());
       }
 
-      ExpressionDef def = context.getPhenotype().getExpressionDef(context.currentLibrary(), elm.getName());
+      ExpressionDef def;
+
+      if (context.getPhenotype() != null) {
+        def = context.getPhenotype().getExpressionDef(context.currentLibrary(), elm.getName());
+      } else {
+        def = context.getExpressionDef(elm.getName());
+      }
 
       visitExpressionDef(def, context);
 
@@ -605,7 +673,30 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitQuery(Query elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmQueryCounts.query++;
-    return super.visitQuery(elm, context);
+
+    // Fully overriding this method so we have more control
+    for (AliasedQuerySource source : elm.getSource()) {
+      visitElement(source, context);
+    }
+    if (elm.getLet() != null && !elm.getLet().isEmpty()) {
+      elm.getLet().stream().forEach(let -> visitElement(let, context));
+    }
+    if (elm.getRelationship() != null && !elm.getRelationship().isEmpty()) {
+      elm.getRelationship().stream().forEach(relationship -> visitElement(relationship, context));
+    }
+    if (elm.getWhere() != null) {
+      visitElement(elm.getWhere(), context);
+    }
+    if (elm.getReturn() != null) {
+      visitElement(elm.getReturn(), context);
+    }
+    if (elm.getAggregate() != null) {
+      visitElement(elm.getAggregate(), context);
+    }
+    if (elm.getSort() != null) {
+      visitElement(elm.getSort(), context);
+    }
+    return null;
   }
 
   @Override
@@ -627,8 +718,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     // ELM Counts
     context.getQuantities().elmQueryCounts.retrieve++;
 
-    context.getQuantities().phemaQueryCounts.retrieveTotal++;
-    context.getQuantities().phemaQueryCounts.dataSources.add(elm.getDataType().toString());
+    context.getQuantities().dimensions.phemaDataCounts.retrieveTotal++;
+    context.getQuantities().dimensions.phemaDataCounts.dataSources.add(elm.getDataType().toString());
 
     return super.visitRetrieve(elm, context);
   }
@@ -1208,8 +1299,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     context.getQuantities().elmTemporalCounts.dateTime++;
 
     // PhEMA Counts
-    context.getQuantities().phemaLiteralCounts.total++;
-    context.getQuantities().phemaLiteralCounts.types.add("DateTime");
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("DateTime");
 
     // Don't descend/evaluate subexpressions
     return null;
@@ -1219,8 +1310,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitTime(Time elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTemporalCounts.time++;
-    context.getQuantities().phemaLiteralCounts.total++;
-    context.getQuantities().phemaLiteralCounts.types.add("Time");
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Time");
 
     // Don't descend/evaluate subexpressions
     return null;
@@ -1258,8 +1349,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitDate(Date elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTemporalCounts.date++;
-    context.getQuantities().phemaLiteralCounts.total++;
-    context.getQuantities().phemaLiteralCounts.types.add("Date");
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Date");
 
     // Don't descend/evaluate subexpressions
     return null;
@@ -2038,4 +2129,121 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     return super.visitMessage(elm, context);
   }
   //</editor-fold>
-}
+
+  //// Methods for detecting the expressions we care about
+  public boolean isPhemaLogicalExpression(Expression elm) {
+    return (elm instanceof And) ||
+      (elm instanceof Or) ||
+      (elm instanceof Not) ||
+      (elm instanceof Implies) ||
+      (elm instanceof Xor);
+  }
+
+  public boolean isPhemaComparisonExpression(Expression elm) {
+    return (elm instanceof Equal) ||
+      (elm instanceof Equivalent) ||
+      (elm instanceof Greater) ||
+      (elm instanceof GreaterOrEqual) ||
+      (elm instanceof Less) ||
+      (elm instanceof LessOrEqual) ||
+      (elm instanceof NotEqual);
+  }
+
+  public boolean isPhemaArithmeticExpression(Expression elm) {
+    return (elm instanceof Add) ||
+      (elm instanceof Subtract) ||
+      (elm instanceof Multiply) ||
+      (elm instanceof Divide) ||
+      (elm instanceof TruncatedDivide) ||
+      (elm instanceof Modulo) ||
+      (elm instanceof Ceiling) ||
+      (elm instanceof Floor) ||
+      (elm instanceof Truncate) ||
+      (elm instanceof Abs) ||
+      (elm instanceof Negate) ||
+      (elm instanceof Round) ||
+      (elm instanceof Ln) ||
+      (elm instanceof Exp) ||
+      (elm instanceof Log) ||
+      (elm instanceof Power) ||
+      (elm instanceof Successor) ||
+      (elm instanceof Predecessor) ||
+      (elm instanceof MinValue) ||
+      (elm instanceof MaxValue) ||
+      (elm instanceof Precision) ||
+      (elm instanceof LowBoundary) ||
+      (elm instanceof HighBoundary) ||
+      (elm instanceof Total);
+  }
+
+  public boolean isPhemaAggregateExpression(Expression elm) {
+    return (elm instanceof Count) ||
+      (elm instanceof Sum) ||
+      (elm instanceof Product) ||
+      (elm instanceof Min) ||
+      (elm instanceof Max) ||
+      (elm instanceof Avg) ||
+      (elm instanceof GeometricMean) ||
+      (elm instanceof Median) ||
+      (elm instanceof Mode) ||
+      (elm instanceof Variance) ||
+      (elm instanceof StdDev) ||
+      (elm instanceof PopulationVariance) ||
+      (elm instanceof PopulationStdDev) ||
+      (elm instanceof AllTrue) ||
+      (elm instanceof AnyTrue);
+  }
+
+  // Data expression depth handled manually in visitQuery method
+
+  public boolean isPhemaConditionalExpression(Expression elm) {
+    return (elm instanceof If) || (elm instanceof Case);
+  }
+
+  public boolean isPhemaTemporalExpression(Expression elm) {
+    return (elm instanceof CalculateAge) ||
+      (elm instanceof CalculateAgeAt) ||
+      (elm instanceof DurationBetween) ||
+      (elm instanceof DifferenceBetween) ||
+      (elm instanceof DateFrom) ||
+      (elm instanceof TimeFrom) ||
+      (elm instanceof TimezoneOffsetFrom) ||
+      (elm instanceof DateTimeComponentFrom) ||
+      (elm instanceof TimeOfDay) ||
+      (elm instanceof Today) ||
+      (elm instanceof Now) ||
+      (elm instanceof SameAs) ||
+      (elm instanceof SameOrBefore) ||
+      (elm instanceof SameOrAfter) ||
+      (elm instanceof TimezoneFrom);
+  }
+
+  // Modularity/statement depth handled directly in visitExpression
+
+  public boolean isPhemaTerminologyExpression(Expression elm) {
+    return (elm instanceof InCodeSystem) ||
+      (elm instanceof InValueSet) ||
+      (elm instanceof AnyInCodeSystem) ||
+      (elm instanceof AnyInValueSet) ||
+      (elm instanceof Subsumes) ||
+      (elm instanceof SubsumedBy);
+  }
+
+  public boolean isPhemaCollectionExpression(Expression elm) {
+    return (elm instanceof Exists) ||
+      (elm instanceof Times) ||
+      (elm instanceof Filter) ||
+      (elm instanceof First) ||
+      (elm instanceof Last) ||
+      (elm instanceof IndexOf) ||
+      (elm instanceof Flatten) ||
+      (elm instanceof Sort) ||
+      (elm instanceof ForEach) ||
+      (elm instanceof Distinct) ||
+      (elm instanceof Current) ||
+      (elm instanceof SingletonFrom) ||
+      (elm instanceof Slice) ||
+      (elm instanceof Repeat) ||
+      (elm instanceof Iteration);
+  }
+} 

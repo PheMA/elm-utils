@@ -62,4 +62,9 @@ public class ElmQuantifierTest {
   public void simpleAg() throws Exception {
     runTest("cql/quantify/quantify-simple.cql", "SimpleAg");
   }
+
+  @Test
+  public void depthTest() throws Exception {
+    runTest("cql/quantify/quantify-simple.cql", "four");
+  }
 }

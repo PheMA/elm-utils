@@ -19,3 +19,27 @@ define SimpleDateInterval:
 
 define SimpleAg:
     Count([MedicationRequest: "Anticoagulant"]) >=2
+
+
+define "one":
+    "two" + 2
+
+define "two":
+    "three" + 3
+
+define "three":
+    4
+
+define "four":
+    ("one" < 3)
+        or
+    "five"
+
+define "five":
+    false or "six"
+
+define "six":
+    true and "seven"
+
+define "seven":
+    true

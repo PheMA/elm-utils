@@ -8,6 +8,7 @@ import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.Library;
 import org.hl7.fhir.Bundle;
 
+import java.util.Optional;
 import java.util.Stack;
 
 public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationContext {
@@ -47,6 +48,17 @@ public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationC
     this.quantities = quantities;
   }
 
+  public ExpressionDef getExpressionDef(String name) throws ElmQuantifierException {
+    Optional<ExpressionDef> mayExprDef = this.library.getStatements().getDef().stream()
+      .filter(s -> s.getName().equals(name))
+      .findFirst();
+
+    if (!mayExprDef.isPresent()) {
+      throw new ElmQuantifierException("Could not find statement with name: " + name);
+    }
+
+    return mayExprDef.get();
+  }
 
   public ElmQuantifyContext(Library library) {
     this.library = library;

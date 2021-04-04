@@ -7,9 +7,222 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Stack;
 
 public class ElmQuantities {
+  public Stack<PhemaAnalysisDepths> depths;
+  public PhemaAnalysisDimensions dimensions;
+
+  public ElmQuantities() {
+    depths = new Stack<>();
+
+    // push the global depth counter
+    depths.push(new PhemaAnalysisDepths());
+
+    dimensions = new PhemaAnalysisDimensions();
+  }
+
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // ANALYSIS DIMENSIONS: Object for counting relevant metrics in a given context
+  //
+  /////////////////////////////////////////////////////////////////////////////
+  public class PhemaAnalysisDepths {
+    // Logical expressions
+    public int phemaLogicalMaxDepth = 0;
+    private int phemaLogicalDepth = 0;
+
+    public void incrementPhemaLogicalDepth() {
+      phemaLogicalDepth++;
+
+      if (phemaLogicalDepth > phemaLogicalMaxDepth) {
+        phemaLogicalMaxDepth = phemaLogicalDepth;
+      }
+    }
+
+    public void decrementPhemaLogicalDepth() {
+      phemaLogicalDepth--;
+    }
+
+    // Comparison expressions
+    public int phemaComparisonMaxDepth = 0;
+    private int phemaComparisonDepth = 0;
+
+    public void incrementPhemaComparisonDepth() {
+      phemaComparisonDepth++;
+
+      if (phemaComparisonDepth > phemaComparisonMaxDepth) {
+        phemaComparisonMaxDepth = phemaComparisonDepth;
+      }
+    }
+
+    public void decrementPhemaComparisonDepth() {
+      phemaComparisonDepth--;
+    }
+
+    // Arithmetic expressions
+    public int phemaArithmeticMaxDepth = 0;
+    private int phemaArithmeticDepth = 0;
+
+    public void incrementPhemaArithmeticDepth() {
+      phemaArithmeticDepth++;
+
+      if (phemaArithmeticDepth > phemaArithmeticMaxDepth) {
+        phemaArithmeticMaxDepth = phemaArithmeticDepth;
+      }
+    }
+
+    public void decrementPhemaArithmeticDepth() {
+      phemaArithmeticDepth--;
+    }
+
+    // Aggregate expressions
+    public int phemaAggregateMaxDepth = 0;
+    private int phemaAggregateDepth = 0;
+
+    public void incrementPhemaAggregateDepth() {
+      phemaAggregateDepth++;
+
+      if (phemaAggregateDepth > phemaAggregateMaxDepth) {
+        phemaAggregateMaxDepth = phemaAggregateDepth;
+      }
+    }
+
+    public void decrementPhemaAggregateDepth() {
+      phemaAggregateDepth--;
+    }
+
+    // Data expressions
+    public int whereClauseMaxDepth = 0;
+    private int whereClauseDepth = 0;
+
+    public void setWhereClauseDepth(int depth) {
+      whereClauseDepth = depth;
+
+      if (whereClauseDepth > whereClauseMaxDepth) {
+        whereClauseMaxDepth = whereClauseDepth;
+      }
+    }
+
+    // Conditional expressions
+    public int phemaConditionalMaxDepth = 0;
+    private int phemaConditionalDepth = 0;
+
+    public void incrementPhemaConditionalDepth() {
+      phemaConditionalDepth++;
+
+      if (phemaConditionalDepth > phemaConditionalMaxDepth) {
+        phemaConditionalMaxDepth = phemaConditionalDepth;
+      }
+    }
+
+    public void decrementPhemaConditionalDepth() {
+      phemaConditionalDepth--;
+    }
+
+    // Temporal expressions
+    public int phemaTemporalMaxDepth = 0;
+    private int phemaTemporalDepth = 0;
+
+    public void incrementPhemaTemporalDepth() {
+      phemaTemporalDepth++;
+
+      if (phemaTemporalDepth > phemaTemporalMaxDepth) {
+        phemaTemporalMaxDepth = phemaTemporalDepth;
+      }
+    }
+
+    public void decrementPhemaTemporalDepth() {
+      phemaTemporalDepth--;
+    }
+
+    // Modularity expressions
+    public int phemaExpressionMaxDepth = 0;
+    private int phemaExpressionDepth = 0;
+
+    public void incrementPhemaExpressionDepth() {
+      phemaExpressionDepth++;
+
+      if (phemaExpressionDepth > phemaExpressionMaxDepth) {
+        phemaExpressionMaxDepth = phemaExpressionDepth;
+      }
+    }
+
+    public void decrementPhemaExpressionDepth() {
+      phemaExpressionDepth--;
+    }
+
+    // Terminology expressions
+    public int phemaTerminologyMaxDepth = 0;
+    private int phemaTerminologyDepth = 0;
+
+    public void incrementPhemaTerminologyDepth() {
+      phemaTerminologyDepth++;
+
+      if (phemaTerminologyDepth > phemaTerminologyMaxDepth) {
+        phemaTerminologyMaxDepth = phemaTerminologyDepth;
+      }
+    }
+
+    public void decrementPhemaTerminologyDepth() {
+      phemaTerminologyDepth--;
+    }
+
+    // Collection expressions
+    public int phemaCollectionMaxDepth = 0;
+    private int phemaCollectionDepth = 0;
+
+    public void incrementPhemaCollectionDepth() {
+      phemaCollectionDepth++;
+
+      if (phemaCollectionDepth > phemaCollectionMaxDepth) {
+        phemaCollectionMaxDepth = phemaCollectionDepth;
+      }
+    }
+
+    public void decrementPhemaCollectionDepth() {
+      phemaCollectionDepth--;
+    }
+  }
+
+  public class PhemaAnalysisDimensions {
+    // Literals
+    public PhemaLiteralCounts phemaLiteralCounts = new PhemaLiteralCounts();
+
+    // Logical expressions
+    public PhemaLogicalCounts phemaLogicalCounts = new PhemaLogicalCounts();
+
+    // Comparison expressions
+    public PhemaComparisonCounts phemaComparisonCounts = new PhemaComparisonCounts();
+
+    // Arithmetic expressions
+    public PhemaArithmeticCounts phemaArithmeticCounts = new PhemaArithmeticCounts();
+
+    // Aggregate expressions
+    public PhemaAggregateCounts phemaAggregateCounts = new PhemaAggregateCounts();
+
+    // Data expressions
+    public PhemaDataCounts phemaDataCounts = new PhemaDataCounts();
+
+    // Conditional expressions
+    public PhemaConditionalCounts phemaConditionalCounts = new PhemaConditionalCounts();
+
+    // Temporal expressions
+    public PhemaTemporalCounts phemaTemporalCounts = new PhemaTemporalCounts();
+
+    // Modularity
+    public PhemaModularityCounts phemaModularityCounts = new PhemaModularityCounts();
+
+    // Terminology
+    public PhemaTerminologyCounts phemaTerminologyCounts = new PhemaTerminologyCounts();
+
+    // Collections
+    public PhemaCollectionCounts phemaCollectionCounts = new PhemaCollectionCounts();
+  }
+
   /////////////////////////////////////////////////////////////////////////////
   //
   // DERIVED COUNTS: The stuff we want to report
@@ -21,12 +234,7 @@ public class ElmQuantities {
     public Set<String> types = new HashSet<>();
   }
 
-  public class PhemaQueryCounts {
-    public int retrieveTotal;
-    public Set<String> dataSources = new HashSet<>();
-  }
-
-  public class LogicalExpressionCounts {
+  public class PhemaLogicalCounts {
     public int and;
     public int or;
     public int not;
@@ -34,7 +242,7 @@ public class ElmQuantities {
     public int xor;
   }
 
-  public class ComparisonCounts {
+  public class PhemaComparisonCounts {
     public int equal;
     public int equivalent;
     public int notEqual;
@@ -44,27 +252,153 @@ public class ElmQuantities {
     public int greaterOrEqual;
   }
 
-
-  public class Depths {
-    public int expression;
-    public int logical;
-    public int temporal;
-    public int arithmetic;
-    public int comparison;
-    public int query;
+  public class PhemaArithmeticCounts {
+    public int add;
+    public int subtract;
+    public int multiply;
+    public int divide;
+    public int truncatedDivide;
+    public int modulo;
+    public int ceiling;
+    public int floor;
+    public int truncate;
+    public int abs;
+    public int negate;
+    public int round;
+    public int ln;
+    public int exp;
+    public int log;
+    public int power;
+    public int successor;
+    public int predecessor;
+    public int minValue;
+    public int maxValue;
+    public int precision;
+    public int lowBoundary;
+    public int highBoundary;
+    public int total;
   }
 
-  public class MaxDepths {
-    public int expression;
-    public int logical;
-    public int temporal;
-    public int arithmetic;
-    public int comparison;
-    public int query;
+  public class PhemaAggregateCounts {
+    public int product;
+    public int geometricMean;
+    public int count;
+    public int sum;
+    public int min;
+    public int max;
+    public int avg;
+    public int median;
+    public int mode;
+    public int variance;
+    public int populationVariance;
+    public int stdDev;
+    public int populationStdDev;
+    public int allTrue;
+    public int anyTrue;
   }
 
-  public PhemaLiteralCounts phemaLiteralCounts = new PhemaLiteralCounts();
-  public PhemaQueryCounts phemaQueryCounts = new PhemaQueryCounts();
+  public class PhemaDataCounts {
+    public int retrieveTotal;
+    public Set<String> dataSources = new HashSet<>();
+    public int whereClauseExpressionMaxCount;
+    public int whereClauseExpressionMaxDepth;
+  }
+
+  public class PhemaConditionalCounts {
+    public int _if;
+    public int _case;
+  }
+
+  public class PhemaTemporalCounts {
+    // Allen's operators
+    public int precedes;
+    public int isPrecededBy;
+    public int meets;
+    public int isMetBy;
+    public int overlapsWith;
+    public int isOverlappedBy;
+    public int starts;
+    public int isStartedBy;
+    public int during;
+    public int contains;
+    public int finishes;
+    public int isFinishedBy;
+    public int equals;
+
+    // Patient age
+    public int calculateAge;
+    public int calculateAgeAt;
+
+    // Other temporal operators
+    public int durationBetween;
+    public int differenceBetween;
+    public int today;
+    public int now;
+
+    /*
+    public int sameAs;        // equals
+    public int sameOrBefore;  // meets
+    public int sameOrAfter;   // isMetBy
+     */
+  }
+
+  public class PhemaModularityCounts {
+    // totals
+    public int expression;
+    public int statement;
+    public int function;
+
+    // local totals
+    public int localStatement;
+    public int localFunction;
+
+    // external totals
+    public int exteralStatement;
+    public int exteralFunction;
+  }
+
+  public class PhemaTerminologyCounts {
+    public int inCodeSystem;
+    public int inValueSet;
+    public int anyInCodeSystem;
+    public int anyInValueSet;
+    public int subsumes;
+    public int subsumedBy;
+  }
+
+  public class PhemaCollectionCounts {
+    // list operations
+    public int exists;
+    public int times;
+    public int filter;
+    public int first;
+    public int last;
+    public int indexOf;
+    public int flatten;
+    public int sort;
+    public int forEach;
+    public int distinct;
+    public int current;
+    public int singletonFrom;
+    public int slice;
+    public int repeat;
+    public int iteration;
+
+    // operations from intervals that also apply to lists
+    public int contains;
+    public int equal;
+    public int equivalent;
+    public int except;
+    public int in;
+    public int includes;
+    public int includedIn;
+    public int notEqual;
+    public int properContains;
+    public int properIn;
+    public int properIncludes;
+    public int properIncludedIn;
+    public int union;
+  }
 
   /////////////////////////////////////////////////////////////////////////////
   //
