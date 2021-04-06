@@ -6,10 +6,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 public class ElmQuantities {
   public Stack<PhemaAnalysisDepths> depths;
@@ -24,6 +21,13 @@ public class ElmQuantities {
     dimensions = new PhemaAnalysisDimensions();
   }
 
+  public void pushDepthTracker() {
+    depths.push(new PhemaAnalysisDepths());
+  }
+
+  public PhemaAnalysisDepths popDepthTracker() {
+    return depths.pop();
+  }
 
   /////////////////////////////////////////////////////////////////////////////
   //
@@ -298,10 +302,27 @@ public class ElmQuantities {
   }
 
   public class PhemaDataCounts {
-    public int retrieveTotal;
+    public int retrieve;
     public Set<String> dataSources = new HashSet<>();
-    public int whereClauseExpressionMaxCount;
-    public int whereClauseExpressionMaxDepth;
+
+    public int query;
+
+    public int property;
+
+    public int whereClauseMaxExpressionCount;
+    public int whereClauseMaxDepth;
+
+    public void recordWhereClauseMaxDepth(int depth) {
+      if (depth > whereClauseMaxDepth) {
+        whereClauseMaxDepth = depth;
+      }
+    }
+
+    public void recordWhereClauseExpressionCount(int count) {
+      if (count > whereClauseMaxExpressionCount) {
+        whereClauseMaxExpressionCount = count;
+      }
+    }
   }
 
   public class PhemaConditionalCounts {
@@ -358,12 +379,24 @@ public class ElmQuantities {
   }
 
   public class PhemaTerminologyCounts {
+    public PhemaTerminologyCounts() {
+      uniqueValueSets = new HashSet<>();
+      perSystemCounts = new HashMap<>();
+    }
+
+    // operations
     public int inCodeSystem;
     public int inValueSet;
     public int anyInCodeSystem;
     public int anyInValueSet;
     public int subsumes;
     public int subsumedBy;
+
+    // value set numbers
+    public Set<String> uniqueValueSets;
+    public Map<String, Integer> perSystemCounts;
+    public int codes;
+    public int systems;
   }
 
   public class PhemaCollectionCounts {

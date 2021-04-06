@@ -8,15 +8,13 @@ import org.cqframework.cql.cql2elm.ModelManager;
 import org.hl7.elm.r1.ExpressionDef;
 import org.hl7.elm.r1.ExpressionRef;
 import org.hl7.elm.r1.Library;
+import org.hl7.elm.r1.ValueSetDef;
 import org.hl7.fhir.r4.model.*;
 
-import java.io.IOException;
 import java.lang.String;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Phenotype {
@@ -88,7 +86,7 @@ public class Phenotype {
     phenotype.getEntry().stream()
       .filter(x -> x.getResource().getResourceType() == ResourceType.ValueSet)
       .map(x -> (org.hl7.fhir.r4.model.ValueSet) x.getResource())
-      .forEach(v -> this.valueSets.put(v.getId(), v));
+      .forEach(v -> this.valueSets.put(v.getIdElement().getIdPart(), v));
   }
 
   public String getCqlFromLibrary(org.hl7.fhir.r4.model.Library library) throws ElmQuantifierException {
@@ -232,5 +230,103 @@ public class Phenotype {
 
       return getExpressionDef(library, ref.getName());
     }
+  }
+
+  // Terminology helper functions
+  public ValueSet getValueSet(String name, String libraryId) throws ElmQuantifierException {
+    Library library = getLibrary(libraryId);
+
+    Optional<ValueSetDef> maybeValueSetDef = library.getValueSets().getDef()
+      .stream().filter(v -> v.getName().equals(name)).findFirst();
+
+    if (!maybeValueSetDef.isPresent()) {
+      throw new ElmQuantifierException("Could not find value set " + name + " in library " + libraryId);
+    }
+
+    ValueSetDef valueSetDef = maybeValueSetDef.get();
+
+    ValueSet valueSet = this.valueSets.get(valueSetDef.getId());
+
+    if (valueSet == null) {
+      throw new ElmQuantifierException("Could not find value set " + name + " in library " + libraryId);
+    }
+
+    return valueSet;
+  }
+
+  public int countCodesInValueSet(String name, String libraryId) throws ElmQuantifierException {
+    ValueSet valueSet = getValueSet(name, libraryId);
+
+    return countCodesInValueSet(valueSet, null);
+  }
+
+  public int countCodesInValueSet(ValueSet valueSet, String system) throws ElmQuantifierException {
+    int total = 0;
+
+    for (ValueSet.ConceptSetComponent i : valueSet.getCompose().getInclude()) {
+      if (i.getConcept() != null) {
+        if (i.getValueSet() != null && i.getValueSet().size() != 0) {
+          // follow reference if there is one
+          for (CanonicalType c : i.getValueSet()) {
+            ValueSet v = getValueSetFromCanonical(c.getValue());
+
+            total += countCodesInValueSet(v, system);
+          }
+        } else {
+          // Count the number of codes
+          if (system == null || (i.getSystem() != null && i.getSystem().equals(system))) {
+            total += i.getConcept().size();
+          }
+        }
+      }
+    }
+
+    return total;
+  }
+
+  public ValueSet getValueSetFromCanonical(String canonicalUrl) throws ElmQuantifierException {
+    Optional<ValueSet> maybeValueSet = this.valueSets.values().stream()
+      .filter(v -> v.getUrl().equals(canonicalUrl)).findFirst();
+
+    if (!maybeValueSet.isPresent()) {
+      throw new ElmQuantifierException("Could not find value set with URL: " + canonicalUrl);
+    }
+
+    return maybeValueSet.get();
+  }
+
+  public Collection<String> getAllSystemsInValueSet(String name, String libraryId) throws ElmQuantifierException {
+    ValueSet valueSet = getValueSet(name, libraryId);
+
+    return getAllSystemsInValueSet(valueSet);
+  }
+
+  public Collection<String> getAllSystemsInValueSet(ValueSet valueSet) throws ElmQuantifierException {
+    Set<String> uniqueSystems = new HashSet<>();
+
+    for (ValueSet.ConceptSetComponent i : valueSet.getCompose().getInclude()) {
+      if (i.getConcept() != null && i.getConcept().size() != 0) {
+        uniqueSystems.add(i.getSystem());
+      } else if (i.getValueSet() != null) {
+        for (CanonicalType c : i.getValueSet()) {
+          ValueSet v = getValueSetFromCanonical(c.getValue());
+
+          uniqueSystems.addAll(getAllSystemsInValueSet(v));
+        }
+      }
+    }
+
+    return uniqueSystems;
+  }
+
+  public int countCodesForSystemInValueSet(String system, String valueSetName, String libraryId) throws
+    ElmQuantifierException {
+    ValueSet valueSet = getValueSet(valueSetName, libraryId);
+
+    return countCodesForSystemInValueSet(valueSet, system);
+  }
+
+  public int countCodesForSystemInValueSet(ValueSet valueSet, String system) throws ElmQuantifierException {
+    return countCodesInValueSet(valueSet, system);
   }
 }

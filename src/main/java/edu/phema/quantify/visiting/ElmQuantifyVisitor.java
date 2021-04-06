@@ -7,6 +7,8 @@ import org.cqframework.cql.elm.visiting.ElmBaseLibraryVisitor;
 import org.hl7.cql.model.DataType;
 import org.hl7.elm.r1.*;
 
+import java.util.Collection;
+
 /**
  * Documentation found here: http://build.fhir.org/ig/HL7/cql/04-logicalspecification.html
  */
@@ -242,6 +244,11 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitTuple(Tuple elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmLiteralCounts.tuple++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Tuple");
+
     return super.visitTuple(elm, context);
   }
 
@@ -263,6 +270,11 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitInstance(Instance elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmLiteralCounts.instance++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Instance");
+
     return super.visitInstance(elm, context);
   }
 
@@ -277,6 +289,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitProperty(Property elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmLiteralCounts.property++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaDataCounts.property++;
+
+    // bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitProperty(elm, context);
   }
 
@@ -320,6 +339,45 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitValueSetRef(ValueSetRef elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmClinicalValueCounts.valueSetRef++;
+
+    // PhEMA Counts
+    try {
+      String libraryName;
+
+      if (elm.getLibraryName() == null) {
+        libraryName = context.currentLibrary();
+      } else {
+        libraryName = elm.getLibraryName();
+      }
+
+      // Only process each unique value set onces
+      if (!context.getQuantities().dimensions.phemaTerminologyCounts.uniqueValueSets.contains(libraryName + ":" + elm.getName())) {
+        // Total count
+        int totalCodeCount = context.getPhenotype().countCodesInValueSet(elm.getName(), libraryName);
+
+        context.getQuantities().dimensions.phemaTerminologyCounts.codes += totalCodeCount;
+
+        // Count per system
+        Collection<String> systems = context.getPhenotype().getAllSystemsInValueSet(elm.getName(), libraryName);
+
+        for (String system : systems) {
+          int systemTotal = context.getPhenotype().countCodesForSystemInValueSet(system, elm.getName(), libraryName);
+
+          if (context.getQuantities().dimensions.phemaTerminologyCounts.perSystemCounts.containsKey(system)) {
+            int runningTotal = context.getQuantities().dimensions.phemaTerminologyCounts.perSystemCounts.get(system);
+
+            context.getQuantities().dimensions.phemaTerminologyCounts.perSystemCounts.put(system, runningTotal + systemTotal);
+          } else {
+            context.getQuantities().dimensions.phemaTerminologyCounts.perSystemCounts.put(system, systemTotal);
+          }
+        }
+
+        context.getQuantities().dimensions.phemaTerminologyCounts.uniqueValueSets.add(libraryName + ":" + elm.getName());
+      }
+    } catch (Exception e) {
+      warn(e.getMessage());
+    }
+
     return super.visitValueSetRef(elm, context);
   }
 
@@ -685,7 +743,17 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
       elm.getRelationship().stream().forEach(relationship -> visitElement(relationship, context));
     }
     if (elm.getWhere() != null) {
+
+      int preWhere = context.getQuantities().dimensions.phemaModularityCounts.expression;
+      context.getQuantities().pushDepthTracker();
+
       visitElement(elm.getWhere(), context);
+
+      ElmQuantities.PhemaAnalysisDepths depths = context.getQuantities().popDepthTracker();
+      int postWhere = context.getQuantities().dimensions.phemaModularityCounts.expression;
+
+      context.getQuantities().dimensions.phemaDataCounts.recordWhereClauseMaxDepth(depths.phemaExpressionMaxDepth);
+      context.getQuantities().dimensions.phemaDataCounts.recordWhereClauseExpressionCount(postWhere - preWhere);
     }
     if (elm.getReturn() != null) {
       visitElement(elm.getReturn(), context);
@@ -718,7 +786,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     // ELM Counts
     context.getQuantities().elmQueryCounts.retrieve++;
 
-    context.getQuantities().dimensions.phemaDataCounts.retrieveTotal++;
+    context.getQuantities().dimensions.phemaDataCounts.retrieve++;
     context.getQuantities().dimensions.phemaDataCounts.dataSources.add(elm.getDataType().toString());
 
     return super.visitRetrieve(elm, context);
