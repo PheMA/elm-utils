@@ -2690,6 +2690,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitExists(Exists elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.exists++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.exists++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitExists(elm, context);
   }
 
@@ -2697,6 +2704,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitTimes(Times elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.times++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.times++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitTimes(elm, context);
   }
 
@@ -2704,6 +2718,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitFilter(Filter elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.filter++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.filter++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitFilter(elm, context);
   }
 
@@ -2711,6 +2732,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitFirst(First elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.first++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.first++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitFirst(elm, context);
   }
 
@@ -2718,6 +2746,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitLast(Last elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.last++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.last++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitLast(elm, context);
   }
 
@@ -2725,6 +2760,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitIndexOf(IndexOf elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.indexOf++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.indexOf++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitIndexOf(elm, context);
   }
 
@@ -2732,6 +2774,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitFlatten(Flatten elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.flatten++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.flatten++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitFlatten(elm, context);
   }
 
@@ -2739,6 +2788,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitSort(Sort elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.sort++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.sort++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitSort(elm, context);
   }
 
@@ -2746,6 +2802,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitForEach(ForEach elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.forEach++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.forEach++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitForEach(elm, context);
   }
 
@@ -2753,6 +2816,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitDistinct(Distinct elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.distinct++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.distinct++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitDistinct(elm, context);
   }
 
@@ -2760,6 +2830,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitCurrent(Current elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.current++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.current++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitCurrent(elm, context);
   }
 
@@ -2767,6 +2844,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitSingletonFrom(SingletonFrom elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.singletonFrom++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.singletonFrom++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitSingletonFrom(elm, context);
   }
 
@@ -2776,6 +2860,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitSlice(Slice elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.slice++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.slice++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitSlice(elm, context);
   }
 
@@ -2783,6 +2874,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitRepeat(Repeat elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.repeat++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.repeat++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitRepeat(elm, context);
   }
 
@@ -2790,6 +2888,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitIteration(Iteration elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmListCounts.iteration++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaCollectionCounts.iteration++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitIteration(elm, context);
   }
   //</editor-fold>
@@ -2811,6 +2916,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitProduct(Product elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.product++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.product++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitProduct(elm, context);
   }
 
@@ -2818,6 +2930,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitGeometricMean(GeometricMean elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.geometricMean++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.geometricMean++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitGeometricMean(elm, context);
   }
 
@@ -2825,6 +2944,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitCount(Count elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.count++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.count++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitCount(elm, context);
   }
 
@@ -2832,6 +2958,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitSum(Sum elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.sum++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.sum++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitSum(elm, context);
   }
 
@@ -2839,6 +2972,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitMin(Min elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.min++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.min++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitMin(elm, context);
   }
 
@@ -2846,6 +2986,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitMax(Max elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.max++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.max++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitMax(elm, context);
   }
 
@@ -2853,6 +3000,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitAvg(Avg elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.avg++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.avg++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitAvg(elm, context);
   }
 
@@ -2860,6 +3014,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitMedian(Median elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.median++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.median++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitMedian(elm, context);
   }
 
@@ -2867,6 +3028,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitMode(Mode elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.mode++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.mode++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitMode(elm, context);
   }
 
@@ -2874,6 +3042,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitVariance(Variance elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.variance++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.variance++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitVariance(elm, context);
   }
 
@@ -2881,6 +3056,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitPopulationVariance(PopulationVariance elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.populationVariance++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.populationVariance++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitPopulationVariance(elm, context);
   }
 
@@ -2888,6 +3070,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitStdDev(StdDev elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.stdDev++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.stdDev++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitStdDev(elm, context);
   }
 
@@ -2895,6 +3084,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitPopulationStdDev(PopulationStdDev elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.populationStdDev++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.populationStdDev++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitPopulationStdDev(elm, context);
   }
 
@@ -2902,6 +3098,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitAllTrue(AllTrue elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.allTrue++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.allTrue++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitAllTrue(elm, context);
   }
 
@@ -2909,6 +3112,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitAnyTrue(AnyTrue elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmAggregateCounts.anyTrue++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaAggregateCounts.anyTrue++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitAnyTrue(elm, context);
   }
   //</editor-fold>
@@ -2916,7 +3126,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   //<editor-fold desc="22. TYPE OPERATORS">
   /////////////////////////////////////////////////////////////////////////////
   //
-  // 22. TYPE OPERATORS
+  // 22. TYPE OPERATORS (Ignoring all)
   //
   /////////////////////////////////////////////////////////////////////////////
 
@@ -3149,6 +3359,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitInCodeSystem(InCodeSystem elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.inCodeSystem++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTerminologyCounts.inCodeSystem++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitInCodeSystem(elm, context);
   }
 
@@ -3156,6 +3373,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitInValueSet(InValueSet elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.inValueSet++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTerminologyCounts.inValueSet++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitInValueSet(elm, context);
   }
 
@@ -3163,6 +3387,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitCalculateAge(CalculateAge elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.calculateAge++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTemporalCounts.calculateAge++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitCalculateAge(elm, context);
   }
 
@@ -3170,6 +3401,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitCalculateAgeAt(CalculateAgeAt elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.calculateAgeAt++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTemporalCounts.calculateAgeAt++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitCalculateAgeAt(elm, context);
   }
 
@@ -3177,6 +3415,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitAnyInCodeSystem(AnyInCodeSystem elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.anyInCodeSystem++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTerminologyCounts.anyInCodeSystem++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitAnyInCodeSystem(elm, context);
   }
 
@@ -3184,6 +3429,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitAnyInValueSet(AnyInValueSet elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.anyInValueSet++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTerminologyCounts.anyInValueSet++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitAnyInValueSet(elm, context);
   }
 
@@ -3191,6 +3443,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitSubsumes(Subsumes elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.subsumes++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTerminologyCounts.subsumes++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitSubsumes(elm, context);
   }
 
@@ -3198,6 +3457,13 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitSubsumedBy(SubsumedBy elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmTerminologyCounts.subsumedBy++;
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaTerminologyCounts.subsumedBy++;
+
+    // Bump total expression count
+    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+
     return super.visitSubsumedBy(elm, context);
   }
   //</editor-fold>
