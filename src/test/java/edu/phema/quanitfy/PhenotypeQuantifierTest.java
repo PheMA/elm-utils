@@ -47,4 +47,11 @@ public class PhenotypeQuantifierTest {
   public void boneScanUtilization() throws Exception {
     runTest("phenotypes/phema-phenotype.1197.bone-scan-utilization.bundle.json");
   }
+
+  @Test
+  public void height() throws Exception {
+    runTest("phenotypes/phema-phenotype.13.height.bundle.json");
+  }
+
+
 }

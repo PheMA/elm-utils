@@ -111,6 +111,17 @@ public class ElmQuantities {
       }
     }
 
+    public int sortClauseMaxDepth = 0;
+    private int sortClauseDepth = 0;
+
+    public void setSortClauseDepth(int depth) {
+      sortClauseDepth = depth;
+
+      if (sortClauseDepth > sortClauseMaxDepth) {
+        sortClauseMaxDepth = sortClauseDepth;
+      }
+    }
+
     // Conditional expressions
     public int phemaConditionalMaxDepth = 0;
     private int phemaConditionalDepth = 0;
@@ -143,7 +154,7 @@ public class ElmQuantities {
       phemaTemporalDepth--;
     }
 
-    // Modularity expressions
+    // Total expressions
     public int phemaExpressionMaxDepth = 0;
     private int phemaExpressionDepth = 0;
 
@@ -157,6 +168,22 @@ public class ElmQuantities {
 
     public void decrementPhemaExpressionDepth() {
       phemaExpressionDepth--;
+    }
+
+    // Modular expressions (statement and function calls)
+    public int phemaModularityMaxDepth = 0;
+    private int phemaModularityDepth = 0;
+
+    public void incrementPhemaModularityDepth() {
+      phemaModularityDepth++;
+
+      if (phemaModularityDepth > phemaModularityMaxDepth) {
+        phemaModularityMaxDepth = phemaModularityDepth;
+      }
+    }
+
+    public void decrementPhemaModularityDepth() {
+      phemaModularityDepth--;
     }
 
     // Terminology expressions
@@ -193,37 +220,37 @@ public class ElmQuantities {
   }
 
   public class PhemaAnalysisDimensions {
-    // Literals
+    // 1. Literals
     public PhemaLiteralCounts phemaLiteralCounts = new PhemaLiteralCounts();
 
-    // Logical expressions
+    // 2. Logical expressions
     public PhemaLogicalCounts phemaLogicalCounts = new PhemaLogicalCounts();
 
-    // Comparison expressions
+    // 3. Comparison expressions
     public PhemaComparisonCounts phemaComparisonCounts = new PhemaComparisonCounts();
 
-    // Arithmetic expressions
+    // 4. Arithmetic expressions
     public PhemaArithmeticCounts phemaArithmeticCounts = new PhemaArithmeticCounts();
 
-    // Aggregate expressions
+    // 5. Aggregate expressions
     public PhemaAggregateCounts phemaAggregateCounts = new PhemaAggregateCounts();
 
-    // Data expressions
+    // 6. Data expressions
     public PhemaDataCounts phemaDataCounts = new PhemaDataCounts();
 
-    // Conditional expressions
+    // 7. Conditional expressions
     public PhemaConditionalCounts phemaConditionalCounts = new PhemaConditionalCounts();
 
-    // Temporal expressions
+    // 8. Temporal expressions
     public PhemaTemporalCounts phemaTemporalCounts = new PhemaTemporalCounts();
 
-    // Modularity
+    // 9. Modularity
     public PhemaModularityCounts phemaModularityCounts = new PhemaModularityCounts();
 
-    // Terminology
+    // 10. Terminology
     public PhemaTerminologyCounts phemaTerminologyCounts = new PhemaTerminologyCounts();
 
-    // Collections
+    // 11. Collections
     public PhemaCollectionCounts phemaCollectionCounts = new PhemaCollectionCounts();
   }
 
@@ -302,15 +329,21 @@ public class ElmQuantities {
   }
 
   public class PhemaDataCounts {
+    public Set<String> dataModels = new HashSet<>();
+
     public int retrieve;
     public Set<String> dataSources = new HashSet<>();
 
     public int query;
-
+    public int sort;
     public int property;
+    public int aggregate;
 
     public int whereClauseMaxExpressionCount;
     public int whereClauseMaxDepth;
+
+    public int sortClauseMaxExpressionCount;
+    public int sortClauseMaxDepth;
 
     public void recordWhereClauseMaxDepth(int depth) {
       if (depth > whereClauseMaxDepth) {
@@ -323,28 +356,31 @@ public class ElmQuantities {
         whereClauseMaxExpressionCount = count;
       }
     }
+
+    public void recordSortClauseMaxDepth(int depth) {
+      if (depth > sortClauseMaxDepth) {
+        sortClauseMaxDepth = depth;
+      }
+    }
+
+    public void recordSortClauseExpressionCount(int count) {
+      if (count > sortClauseMaxExpressionCount) {
+        sortClauseMaxExpressionCount = count;
+      }
+    }
   }
 
   public class PhemaConditionalCounts {
     public int _if;
     public int _case;
+
+    // Debatable whether this should go here
+    public int coalesce;
   }
 
   public class PhemaTemporalCounts {
-    // Allen's operators
-    public int precedes;
-    public int isPrecededBy;
-    public int meets;
-    public int isMetBy;
-    public int overlapsWith;
-    public int isOverlappedBy;
-    public int starts;
-    public int isStartedBy;
-    public int during;
-    public int contains;
-    public int finishes;
-    public int isFinishedBy;
-    public int equals;
+    // interval
+    public int start;
 
     // Patient age
     public int calculateAge;
@@ -356,33 +392,67 @@ public class ElmQuantities {
     public int today;
     public int now;
 
-    /*
-    public int sameAs;        // equals
-    public int sameOrBefore;  // meets
-    public int sameOrAfter;   // isMetBy
-     */
+    public int sameAs;
+    public int sameOrBefore;
+    public int sameOrAfter;
+    public int end;
+    public int contains;
+    public int properContains;
+    public int in;
+    public int properIn;
+    public int includes;
+    public int includedIn;
+    public int properIncludes;
+    public int properIncludedIn;
+    public int before;
+    public int after;
+    public int meets;
+    public int meetsBefore;
+    public int meetsAfter;
+    public int overlaps;
+    public int overlapsBefore;
+    public int overlapsAfter;
+    public int starts;
+    public int ends;
+    public int collapse;
+    public int union;
+    public int intersect;
+    public int except;
+    public int size;
+    public int pointFrom;
+    public int expand;
   }
 
   public class PhemaModularityCounts {
+    // includes
+    public Set<String> includes = new HashSet<>();
+
     // totals
     public int expression;
-    public int statement;
-    public int function;
+    public int statementDef;
+    public int functionDef;
 
     // local totals
-    public int localStatement;
-    public int localFunction;
+    public int localStatementCalls;
+    public int localFunctionCalls;
 
     // external totals
-    public int exteralStatement;
-    public int exteralFunction;
+    public int externalStatementCalls;
+    public int externalFunctionCalls;
   }
 
   public class PhemaTerminologyCounts {
-    public PhemaTerminologyCounts() {
-      uniqueValueSets = new HashSet<>();
-      perSystemCounts = new HashMap<>();
-    }
+    // definitions
+    public int codeDef;
+    public int codeSystemDef;
+    public int conceptDef;
+    public int valueSetDef;
+
+    // references
+    public int codeRef;
+    public int codeSystemRef;
+    public int conceptRef;
+    public int valueSetRef;
 
     // operations
     public int inCodeSystem;
@@ -393,13 +463,17 @@ public class ElmQuantities {
     public int subsumedBy;
 
     // value set numbers
-    public Set<String> uniqueValueSets;
-    public Map<String, Integer> perSystemCounts;
+    public Set<String> uniqueValueSets = new HashSet<>();
+    public List<Integer> perValueSetCounts = new ArrayList<>();
+    public Map<String, Integer> perSystemCounts = new HashMap<>();
     public int codes;
     public int systems;
   }
 
   public class PhemaCollectionCounts {
+    // non-temporal interval
+    public int start;
+
     // list operations
     public int exists;
     public int times;
@@ -431,6 +505,22 @@ public class ElmQuantities {
     public int properIncludes;
     public int properIncludedIn;
     public int union;
+    public int end;
+    public int before;
+    public int after;
+    public int meets;
+    public int meetsBefore;
+    public int meetsAfter;
+    public int overlaps;
+    public int overlapsBefore;
+    public int overlapsAfter;
+    public int starts;
+    public int ends;
+    public int collapse;
+    public int intersect;
+    public int size;
+    public int pointFrom;
+    public int expand;
   }
 
   /////////////////////////////////////////////////////////////////////////////

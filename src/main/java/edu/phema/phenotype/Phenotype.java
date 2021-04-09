@@ -5,15 +5,14 @@ import edu.phema.quantify.ElmQuantifierException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
-import org.hl7.elm.r1.ExpressionDef;
-import org.hl7.elm.r1.ExpressionRef;
+import org.hl7.elm.r1.*;
 import org.hl7.elm.r1.Library;
-import org.hl7.elm.r1.ValueSetDef;
 import org.hl7.fhir.r4.model.*;
 
 import java.lang.String;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -184,6 +183,12 @@ public class Phenotype {
     return getLibrary(entryPointId);
   }
 
+  ///////////////////////////////////////////////////////////////
+  //
+  // GET EXPRESSION DEFINITIONS
+  //
+  ///////////////////////////////////////////////////////////////
+
   public ExpressionDef getExpressionDef(Library library, String expressionName) throws ElmQuantifierException {
     Optional<ExpressionDef> maybeExpression = library.getStatements().getDef().stream()
       .filter(e -> e.getName().equals(expressionName)).findFirst();
@@ -201,21 +206,6 @@ public class Phenotype {
     return getExpressionDef(library, expressionName);
   }
 
-  public ExpressionDef getEntryPointExpressionDef() throws ElmQuantifierException {
-    Library library = getEntryPoint();
-
-    // This duplicated code allows for a case insensitive entry point statement name
-
-    Optional<ExpressionDef> maybeExpression = library.getStatements().getDef().stream()
-      .filter(e -> e.getName().toUpperCase().equals(PHENOTYPE_ENTRY_EXPR.toUpperCase())).findFirst();
-
-    if (!maybeExpression.isPresent()) {
-      throw new ElmQuantifierException("No '" + PHENOTYPE_ENTRY_EXPR + "' statement found in entry point library");
-    }
-
-    return maybeExpression.get();
-  }
-
   // Get the definition for a referenced expression
   public ExpressionDef getExpressionDef(ExpressionRef ref) throws ElmQuantifierException {
     Library library;
@@ -231,6 +221,60 @@ public class Phenotype {
       return getExpressionDef(library, ref.getName());
     }
   }
+
+  public ExpressionDef getEntryPointExpressionDef() throws ElmQuantifierException {
+    Library library = getEntryPoint();
+
+    // This duplicated code allows for a case insensitive entry point statement name
+
+    Optional<ExpressionDef> maybeExpression = library.getStatements().getDef().stream()
+      .filter(e -> e.getName().toUpperCase().equals(PHENOTYPE_ENTRY_EXPR.toUpperCase())).findFirst();
+
+    if (!maybeExpression.isPresent()) {
+      throw new ElmQuantifierException("No '" + PHENOTYPE_ENTRY_EXPR + "' statement found in entry point library");
+    }
+
+    return maybeExpression.get();
+  }
+
+  ///////////////////////////////////////////////////////////////
+  //
+  // GET EXPRESSION DEFINITIONS
+  //
+  ///////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////
+  //
+  // GET FUNCTION DEFINITIONS
+  //
+  ///////////////////////////////////////////////////////////////
+
+  public FunctionDef getFunctionDef(String libraryId, String functionName) throws ElmQuantifierException {
+    Library library = getLibrary(libraryId);
+
+    return getFunctionDef(library, functionName);
+  }
+
+  public FunctionDef getFunctionDef(Library library, String functionName) throws ElmQuantifierException {
+    Optional<FunctionDef> maybeExpression = library.getStatements().getDef().stream()
+      .filter(e -> e instanceof FunctionDef)
+      .map(e -> (FunctionDef) e)
+      .filter(f -> f.getName().equals(functionName))
+      .findFirst();
+
+    if (!maybeExpression.isPresent()) {
+      throw new ElmQuantifierException("No '" + functionName + "' function found in library '" + library.getIdentifier().getId() + "'");
+    }
+
+    return maybeExpression.get();
+  }
+
+
+  ///////////////////////////////////////////////////////////////
+  //
+  // GET FUNCTION DEFINITIONS
+  //
+  ///////////////////////////////////////////////////////////////
 
   // Terminology helper functions
   public ValueSet getValueSet(String name, String libraryId) throws ElmQuantifierException {

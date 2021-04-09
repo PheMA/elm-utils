@@ -5,6 +5,7 @@ import edu.phema.quantify.ElmQuantifierException;
 import edu.phema.quantify.ElmQuantities;
 import edu.phema.visiting.ElmBaseStatementPostOrderTransformationContext;
 import org.hl7.elm.r1.ExpressionDef;
+import org.hl7.elm.r1.FunctionDef;
 import org.hl7.elm.r1.Library;
 import org.hl7.fhir.Bundle;
 
@@ -58,6 +59,20 @@ public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationC
     }
 
     return mayExprDef.get();
+  }
+
+  public FunctionDef getFunctionDef(String name) throws ElmQuantifierException {
+    Optional<FunctionDef> mayFuncDef = this.library.getStatements().getDef().stream()
+      .filter(s -> s.getName().equals(name))
+      .filter(e -> e instanceof FunctionDef)
+      .map(e -> (FunctionDef) e)
+      .findFirst();
+
+    if (!mayFuncDef.isPresent()) {
+      throw new ElmQuantifierException("Could not find function with name: " + name);
+    }
+
+    return mayFuncDef.get();
   }
 
   public ElmQuantifyContext(Library library) {
