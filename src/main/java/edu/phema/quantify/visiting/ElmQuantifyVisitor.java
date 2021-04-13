@@ -1029,6 +1029,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitRetrieve(Retrieve elm, ElmQuantifyContext context) {
+    debug("visit Retrieve: " + elm.getDataType().toString() + " : " + ((ValueSetRef) elm.getCodes()).getName());
+
     // ELM Counts
     context.getQuantities().elmQueryCounts.retrieve++;
 
@@ -1371,7 +1373,21 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
 
-    return super.visitIf(elm, context);
+    // I guess If isn't correctly implemented :/
+
+    if (elm.getCondition() != null) {
+      visitExpression(elm.getCondition(), context);
+    }
+
+    if (elm.getThen() != null) {
+      visitExpression(elm.getThen(), context);
+    }
+
+    if (elm.getElse() != null) {
+      visitExpression(elm.getElse(), context);
+    }
+
+    return null;
   }
 
   @Override
