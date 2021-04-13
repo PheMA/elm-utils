@@ -53,5 +53,8 @@ public class PhenotypeQuantifierTest {
     runTest("phenotypes/phema-phenotype.13.height.bundle.json");
   }
 
-
+  @Test
+  public void hdl() throws Exception {
+    runTest("phenotypes/phema-phenotype.12.high-density-lipoproteins-hdl.bundle.json");
+  }
 }

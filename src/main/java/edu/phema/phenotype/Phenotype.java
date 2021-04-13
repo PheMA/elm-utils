@@ -76,7 +76,7 @@ public class Phenotype {
     for (org.hl7.fhir.r4.model.Library library : libraries) {
       Library parsed = libraryResourceToElm(library);
 
-      this.libraries.put(library.getName(), parsed);
+      this.libraries.put(parsed.getIdentifier().getId(), parsed);
     }
 
     // Extract value sets
@@ -113,6 +113,30 @@ public class Phenotype {
     CqlTranslator translator = CqlTranslator.fromText(cql, this.modelManager, this.libraryManager);
 
     return translator.toELM();
+  }
+
+  public String getLibraryIdFromName(String name, String includingLibraryId) throws ElmQuantifierException {
+    String includer;
+
+    if (includingLibraryId == null) {
+      includer = getEntryPointLibraryId();
+    } else {
+      includer = includingLibraryId;
+    }
+
+    Library includerLib = libraries.get(includer);
+
+    if (includerLib == null) {
+      throw new ElmQuantifierException("Cannot find library Id for '" + name + "' included in '" + includingLibraryId + "'");
+    }
+
+    Optional<IncludeDef> maybeLib = includerLib.getIncludes().getDef().stream().filter(i -> i.getLocalIdentifier().equals(name)).findFirst();
+
+    if (!maybeLib.isPresent()) {
+      throw new ElmQuantifierException("Cannot find library Id for '" + name + "' included in '" + includingLibraryId + "'");
+    }
+
+    return maybeLib.get().getPath();
   }
 
   public Library getLibrary(String libraryId) throws ElmQuantifierException {

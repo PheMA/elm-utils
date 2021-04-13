@@ -120,6 +120,19 @@
             <artifactId>hapi-fhir-structures-r4</artifactId>
             <version>${hapi.fhir.version}</version>
         </dependency>
+
+        <!-- Silence logger warning -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -148,6 +161,14 @@
                         <version>2.2.3</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>edu.phema.quantify.PhenotypeQuantifier</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>

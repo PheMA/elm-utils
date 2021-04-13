@@ -652,7 +652,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     context.getQuantities().elmReuseCounts.includeDef++;
 
     // PhEMA Counts
-    context.getQuantities().dimensions.phemaModularityCounts.includes.add(elm.getLocalId());
+    context.getQuantities().dimensions.phemaModularityCounts.includes.add(elm.getPath());
 
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
@@ -736,7 +736,9 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
       // Push the current library ID here so we can know where to
       // find refs later that have a libraryName of null
       if (elm.getLibraryName() != null) {
-        context.pushLibrary(elm.getLibraryName());
+        String libId = context.getPhenotype().getLibraryIdFromName(elm.getLibraryName(), context.currentLibrary());
+
+        context.pushLibrary(libId);
         context.getQuantities().dimensions.phemaModularityCounts.externalFunctionCalls++;
       } else {
         context.getQuantities().dimensions.phemaModularityCounts.localFunctionCalls++;
