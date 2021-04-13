@@ -1395,7 +1395,17 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
   public Void visitCaseItem(CaseItem elm, ElmQuantifyContext context) {
     // ELM Counts
     context.getQuantities().elmConditionalCounts.caseItem++;
-    return super.visitCaseItem(elm, context);
+
+    if (elm.getWhen() != null) {
+      visitExpression(elm.getWhen(), context);
+    }
+
+    if (elm.getThen() != null) {
+      visitExpression(elm.getThen(), context);
+    }
+
+    // Not implemented correctly!
+    return null;
   }
 
   @Override
