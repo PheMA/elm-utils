@@ -810,9 +810,6 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
         ExpressionDef def;
 
-        // decrease depths
-        context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaModularityDepth);
-        context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
 
         if (context.getPhenotype() != null) {
           def = context.getPhenotype().getExpressionDef(context.currentLibrary(), elm.getName());
@@ -821,6 +818,10 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
         }
 
         visitExpressionDef(def, context);
+
+        // decrease depths
+        context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaModularityDepth);
+        context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
 
         if (elm.getLibraryName() != null) {
           context.popLibrary();
