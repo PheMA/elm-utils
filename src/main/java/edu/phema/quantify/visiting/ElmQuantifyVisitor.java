@@ -1030,7 +1030,15 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitRetrieve(Retrieve elm, ElmQuantifyContext context) {
-    debug("visit Retrieve: " + elm.getDataType().toString() + " : " + ((ValueSetRef) elm.getCodes()).getName());
+    if (elm.getCodes() != null) {
+      if (elm.getCodes() instanceof ValueSetRef) {
+        debug("visit Retrieve: " + elm.getDataType().toString() + " : " + ((ValueSetRef) elm.getCodes()).getName());
+      } else {
+        debug("visit Retrieve: " + elm.getDataType().toString() + " : " + elm.getCodes());
+      }
+    } else {
+      debug("visit Retrieve: " + elm.getDataType().toString() + " : (no codes)");
+    }
 
     // ELM Counts
     context.getQuantities().elmQueryCounts.retrieve++;
