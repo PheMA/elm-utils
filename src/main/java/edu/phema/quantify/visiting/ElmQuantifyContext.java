@@ -9,7 +9,9 @@ import org.hl7.elm.r1.FunctionDef;
 import org.hl7.elm.r1.Library;
 import org.hl7.fhir.Bundle;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.Stack;
 
 public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationContext {
@@ -34,6 +36,9 @@ public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationC
   public String currentLibrary() {
     return currentLibrary.peek();
   }
+
+  public Set<String> visitedDefs;
+  public Set<String> visitedExprs;
 
   // Store the full phenotype bundle so we can assess all the artifacts
   private Phenotype phenotype;
@@ -78,6 +83,8 @@ public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationC
   public ElmQuantifyContext(Library library) {
     this.library = library;
     this.quantities = new ElmQuantities();
+    this.visitedDefs = new HashSet<>();
+    this.visitedExprs = new HashSet<>();
   }
 
   public ElmQuantifyContext(Library library, Phenotype phenotype) throws ElmQuantifierException {
@@ -89,6 +96,8 @@ public class ElmQuantifyContext extends ElmBaseStatementPostOrderTransformationC
     this.currentLibrary = new Stack<>();
 
     this.currentLibrary.push(phenotype.getEntryPointLibraryName());
+    this.visitedDefs = new HashSet<>();
+    this.visitedExprs = new HashSet<>();
   }
 
   public ElmQuantifyContext(Phenotype phenotype) throws ElmQuantifierException {

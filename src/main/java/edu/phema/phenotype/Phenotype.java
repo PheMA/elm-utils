@@ -77,6 +77,7 @@ public class Phenotype {
       Library parsed = libraryResourceToElm(library);
 
       this.libraries.put(parsed.getIdentifier().getId(), parsed);
+      this.libraries.put(library.getId(), parsed); // Save with library resource Id too
     }
 
     // Extract value sets
@@ -140,17 +141,13 @@ public class Phenotype {
   }
 
   public Library getLibrary(String libraryId) throws ElmQuantifierException {
-    Optional<org.hl7.fhir.r4.model.Library> maybeLibrary = phenotype.getEntry().stream()
-      .filter(x -> x.getResource().getResourceType() == ResourceType.Library)
-      .map(x -> (org.hl7.fhir.r4.model.Library) x.getResource())
-      .filter(l -> l.getId().equals(libraryId) || l.getName().equals(libraryId))
-      .findFirst();
+    Library lib = this.libraries.get(libraryId);
 
-    if (!maybeLibrary.isPresent()) {
+    if (lib == null) {
       throw new ElmQuantifierException("No Library found with ID: " + libraryId);
     }
 
-    return libraryResourceToElm(maybeLibrary.get());
+    return lib;
   }
 
   public String getEntryPointLibraryName() throws ElmQuantifierException {

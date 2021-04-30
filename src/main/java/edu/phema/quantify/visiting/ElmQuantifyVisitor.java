@@ -1,5 +1,6 @@
 package edu.phema.quantify.visiting;
 
+import com.google.common.collect.ImmutableMap;
 import edu.phema.quantify.ElmQuantifierException;
 import edu.phema.quantify.ElmQuantities;
 import org.cqframework.cql.elm.tracking.Trackable;
@@ -8,11 +9,21 @@ import org.hl7.cql.model.DataType;
 import org.hl7.elm.r1.*;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Documentation found here: http://build.fhir.org/ig/HL7/cql/04-logicalspecification.html
  */
 public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyContext> {
+  static final Map<String, String> UNIT_MAP = ImmutableMap.of(
+    "year", "years",
+    "month", "months",
+    "week", "weeks",
+    "day", "days"
+  );
+
   private boolean debug;
 
   public ElmQuantifyVisitor() {
@@ -142,6 +153,15 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
   @Override
   public Void visitExpression(Expression elm, ElmQuantifyContext context) {
+    String exprId = elm.getTrackerId().toString();
+
+    // prevent duplicate counting
+    if (context.visitedExprs.contains(exprId)) {
+      return null;
+    } else {
+      context.visitedExprs.add(exprId);
+    }
+
     // ELM Counts
     context.getQuantities().elmExpressionCounts.expression++;
 
@@ -174,7 +194,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
       context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaCollectionDepth);
       context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
     } else {
-      debug_msg("Not increasing depth for expression: " + elm.getClass().getName());
+      //debug_msg("Not increasing depth for expression: " + elm.getClass().getName());
     }
 
     super.visitExpression(elm, context);
@@ -318,7 +338,34 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
     // PhEMA Counts
     context.getQuantities().dimensions.phemaLiteralCounts.total++;
-    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Instance");
+//    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Instance");
+
+    if (elm.getClassType().getLocalPart().equals("Quantity")) {
+      Optional<InstanceElement> element = elm.getElement().stream().filter(u -> u.getName().equals("unit")).findFirst();
+
+      if (element.isPresent()) {
+        Expression value = element.get().getValue();
+        if (value instanceof Literal) {
+          String unit = ((Literal) value).getValue();
+
+          if (UNIT_MAP.containsKey(unit)) {
+            unit = UNIT_MAP.get(unit);
+          }
+
+          context.getQuantities().dimensions.phemaLiteralCounts.types.add("Quantity (" + unit + ")");
+        } else {
+          context.getQuantities().dimensions.phemaLiteralCounts.types.add("Quantity");
+        }
+      } else {
+        context.getQuantities().dimensions.phemaLiteralCounts.types.add("Quantity");
+      }
+    } else if (elm.getClassType().getLocalPart().equals("Ratio")) {
+      context.getQuantities().dimensions.phemaLiteralCounts.types.add("Ratio");
+    } else if (elm.getClassType().getLocalPart().equals("Concept")) {
+      context.getQuantities().dimensions.phemaLiteralCounts.types.add("Concept");
+    } else if (elm.getClassType().getLocalPart().equals("Code")) {
+      context.getQuantities().dimensions.phemaLiteralCounts.types.add("Code");
+    }
 
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
@@ -369,6 +416,9 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
     // PhEMA Counts
     context.getQuantities().dimensions.phemaTerminologyCounts.codeSystemDef++;
+
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Code System");
 
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
@@ -495,7 +545,14 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
     // PhEMA Counts
     context.getQuantities().dimensions.phemaLiteralCounts.total++;
-    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Quantity (" + elm.getUnit() + ")");
+
+    String unit = elm.getUnit();
+
+    if (UNIT_MAP.containsKey(unit)) {
+      unit = UNIT_MAP.get(unit);
+    }
+
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Quantity (" + unit + ")");
 
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
@@ -510,7 +567,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
     // PhEMA Counts
     context.getQuantities().dimensions.phemaLiteralCounts.total++;
-    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Ratio (" + elm.getNumerator().getUnit() + "/" + elm.getDenominator().getUnit() + ")");
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Ratio");
 
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
@@ -529,6 +586,9 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
 
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Code");
+
     return super.visitCodeDef(elm, context);
   }
 
@@ -539,6 +599,9 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
     // PhEMA Counts
     context.getQuantities().dimensions.phemaTerminologyCounts.conceptDef++;
+
+    context.getQuantities().dimensions.phemaLiteralCounts.total++;
+    context.getQuantities().dimensions.phemaLiteralCounts.types.add("Concept");
 
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
@@ -756,7 +819,15 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
       context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaModularityDepth);
       context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
 
-      visitFunctionDef(def, context);
+      String funcId = elm.getName() + ":" + def.hashCode();
+
+      if (!context.visitedDefs.contains(funcId)) {
+//        visitFunctionDef(def, context); // this visits the parameter definitions
+        visitExpression(def.getExpression(), context); // this visits the actual expression
+        context.visitedDefs.add(funcId);
+      } else {
+        debug("### ALREADY VISITED FUNCTION: " + funcId);
+      }
 
       // decrease depths
       context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaModularityDepth);
@@ -817,7 +888,15 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
           def = context.getExpressionDef(elm.getName());
         }
 
-        visitExpressionDef(def, context);
+        String exprId = def.getName() + ":" + def.hashCode();
+
+        // Don't visit the same expression multiple times
+        if (!context.visitedDefs.contains(exprId)) {
+          visitExpressionDef(def, context);
+          context.visitedDefs.add(exprId);
+        } else {
+          debug("### ALREADY VISITED: " + exprId);
+        }
 
         // decrease depths
         context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaModularityDepth);
@@ -829,10 +908,10 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
       } catch (Exception e) {
         warn(e.getMessage());
       }
-    }
 
-    // Bump total expression count
-    context.getQuantities().dimensions.phemaModularityCounts.expression++;
+      // Bump total expression count
+      context.getQuantities().dimensions.phemaModularityCounts.expression++;
+    }
 
     return null;
   }
@@ -986,6 +1065,7 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
       elm.getRelationship().stream().forEach(relationship -> visitElement(relationship, context));
     }
     if (elm.getWhere() != null) {
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::incrementPhemaExpressionDepth);
 
       int preWhere = context.getQuantities().dimensions.phemaModularityCounts.expression;
       context.getQuantities().pushDepthTracker();
@@ -997,6 +1077,8 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
 
       context.getQuantities().dimensions.phemaDataCounts.recordWhereClauseMaxDepth(depths.phemaExpressionMaxDepth);
       context.getQuantities().dimensions.phemaDataCounts.recordWhereClauseExpressionCount(postWhere - preWhere);
+
+      context.getQuantities().depths.forEach(ElmQuantities.PhemaAnalysisDepths::decrementPhemaExpressionDepth);
     }
     if (elm.getReturn() != null) {
       visitElement(elm.getReturn(), context);
@@ -1007,6 +1089,9 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     if (elm.getSort() != null) {
       visitElement(elm.getSort(), context);
     }
+
+    // PhEMA Counts
+    context.getQuantities().dimensions.phemaDataCounts.query++;
 
     // Bump total expression count
     context.getQuantities().dimensions.phemaModularityCounts.expression++;
@@ -2103,7 +2188,18 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
     // ELM Counts
     context.getQuantities().elmIntervalCounts.interval++;
 
-    return super.visitInterval(elm, context);
+    if (elm.getLow() != null) {
+      visitElement(elm.getLow(), context);
+    } else if (elm.getLowClosedExpression() != null) {
+      visitElement(elm.getLowClosedExpression(), context);
+    }
+
+    if (elm.getHigh() != null) {
+      visitElement(elm.getHigh(), context);
+    } else if (elm.getHighClosedExpression() != null) {
+      visitElement(elm.getHighClosedExpression(), context);
+    }
+    return null;
   }
 
   @Override
@@ -3636,4 +3732,4 @@ public class ElmQuantifyVisitor extends ElmBaseLibraryVisitor<Void, ElmQuantifyC
       (elm instanceof Repeat) ||
       (elm instanceof Iteration);
   }
-} 
+}

@@ -57,4 +57,28 @@ public class PhenotypeQuantifierTest {
   public void hdl() throws Exception {
     runTest("phenotypes/phema-phenotype.12.high-density-lipoproteins-hdl.bundle.json");
   }
+
+  @Test
+  public void cataracts() throws Exception {
+    runTest("phenotypes/phema-phenotype.9.cataracts.bundle.json");
+  }
+
+  @Test
+  public void fh() throws Exception {
+    runTest("phenotypes/phema-phenotype.602.familial-hypercholesterolemia.bundle.json");
+  }
+
+  @Test
+  public void uc() throws Exception {
+    runTest("phenotypes/phema-phenotype.1404.urinary-incontinence.bundle.json");
+  }
+
+  @Test
+  public void warfarin() throws Exception {
+    runTest("phenotypes/phema-phenotype.156.warfarin-doseresponse.bundle.json");
+  }
 }
+
+
+
+
